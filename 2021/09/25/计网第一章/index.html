@@ -163,7 +163,8 @@
 <p><strong>（2）建议标准</strong>，这个阶段开始就成为RFC文档。</p>
 <p><strong>（3）互联网标准</strong></p>
 <p><strong>注</strong>：所有的RFC文档都可以从互联网上免费下载，而且任何人都可以用电子邮件随时发表对某个文档的意见或建议。</p>
-<h3 id="（六）互联网的组成"><a href="#（六）互联网的组成" class="headerlink" title="（六）互联网的组成"></a>（六）互联网的组成</h3><p>从工作方式上看，可以划分为两大块：</p>
+<hr>
+<h2 id="三、互联网的组成"><a href="#三、互联网的组成" class="headerlink" title="三、互联网的组成"></a>三、互联网的组成</h2><p>从工作方式上看，可以划分为两大块：</p>
 <p><strong>1、边缘部分</strong></p>
 <p>这部分是用户直接使用的。</p>
 <p>网络边缘的端系统之间的通信方式通常可分为两大类：==客户—服务器方式（C/S方式）和对等方式（P2P）方式==。</p>
@@ -172,7 +173,7 @@
 <p><strong>2、核心部分</strong></p>
 <p>这部分是为边缘部分提供服务的（提供连通性和交换）。</p>
 <p>在网络核心部分起特殊作用的是==路由器==，它是实现==分组交换==的关键构件，其任务是==转发收到的分组==。这是网络核心部分最重要的功能。</p>
-<p>这里我们先来了解一下电路交换的基本概念。</p>
+<p>这里我们先来了解一下电路交换及各种其他交换的基本概念。</p>
 <hr>
 <p><strong>（1）电路交换</strong></p>
 <p>电话发明后的一百多年来，电话交换机虽多次更新换代，但交换的方式一直都是==电路交换==。下面就是电话机的不同连接方式</p>
@@ -183,6 +184,105 @@
 <p>这里要解释一下，用户线是用户独占的传送模拟信号的专用线路，而交换机之间拥有大量==话路==的中继线（这些传输线路已数字化），则是许多用户共享的，正在通话的用户只占用了中继线里面的==一个话路==。</p>
 <p>当使用电路交换来传送计算机数据时，线路的传输效率往往很低。故而这里我们引述另一个交换方式——分组交换。</p>
 <p><strong>（2）分组交换</strong></p>
+<p>采用==存储转发==技术。通常我们把报文划分为一个个更小的等长数据段，在每个数据段前，加上一些必要的控制信息组成的==首部==后，就构成了一个==分组==。分组称为“==包==”，而分组的首部也可称为“==包头==”。分组是在互联网中传送的==数据单元==。</p>
+<p><img src="https://img-blog.csdnimg.cn/3b3dd8adf95c42609d422d0ff93dbda8.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>位于网络边缘部分的主机和位于网络核心部分的路由器都是计算机，但作用不一样。主机是为用户进行==信息处理==的，路由器则用来==转发分组==，即进行==分组交换==。</p>
+<p><strong>优点：</strong>高效、灵活、迅速、可靠。</p>
+<p><strong>（3）报文交换</strong></p>
+<p>基于存储转发的原理。</p>
+<p><img src="https://img-blog.csdnimg.cn/587a74ee72da4a67aa87b73175232370.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<hr>
+<p>这里我们对三种交换方式做一个比较</p>
+<p><strong>电路交换：</strong>整个报文的比特流连续地从源点==直达终点==。</p>
+<p><strong>报文交换：</strong>整个报文先传到相邻节点，==全部存储==下来后查找转发表，转发到下一个节点。</p>
+<p><strong>分组交换：</strong>单个分组（报文的一部分）传送到相邻节点，存储下来后查找转发表，转发到下一个节点。</p>
+<p>这里我们用图来更直观地看一下：</p>
+<p><img src="https://img-blog.csdnimg.cn/15b36d4d18b24e168ebc9f422fc74138.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<hr>
+<h2 id="四、互联网的分类"><a href="#四、互联网的分类" class="headerlink" title="四、互联网的分类"></a>四、互联网的分类</h2><h3 id="（一）分类标准"><a href="#（一）分类标准" class="headerlink" title="（一）分类标准"></a>（一）分类标准</h3><p><strong>1、网络的作用范围</strong></p>
+<p>（1）广域网(WAN)，有时也称为远程网，是互联网的核心部分。</p>
+<p>（2）城域网(MAN)</p>
+<p>（3）局域网(LAN)</p>
+<p>（4）个人区域网(PAN)</p>
+<p>顺便指出，若中央处理机之间的距离非常近（如一米的数量级或更小），则一般称之为==多处理机系统==而不称它为计算机网络。</p>
+<p><strong>2、网络的使用者</strong></p>
+<p>（1）公用网，也可称为公众网。</p>
+<p>（2）专用网</p>
+<p><strong>3、用来把用户接入到互联网的网络</strong></p>
+<p>这种网络就是==接入网AN==，又称为==本地接入网==或==居民接入网==。接入网实际上就是本地ISP所拥有的网络，它既不是互联网的核心部分，也不是互联网的边缘部分。</p>
+<hr>
+<h2 id="五、计算机网络的性能"><a href="#五、计算机网络的性能" class="headerlink" title="五、计算机网络的性能"></a>五、计算机网络的性能</h2><h3 id="（一）性能指标"><a href="#（一）性能指标" class="headerlink" title="（一）性能指标"></a>（一）性能指标</h3><p><strong>1、速率</strong></p>
+<p>引入<strong>比特(bit)</strong>的概念：bit意思是一个“二进制数字”，因此一个比特就是一个二进制数字中的一个1或0。比特也是信息论中使用的==信息量的单位==。</p>
+<p>故而，速率是指主机在数字信道上传送数据的速率（比特率/数据率）。</p>
+<p><strong>（1）常用单位</strong>：</p>
+<p>① bit/s（b/s，bps）</p>
+<p>② Mbps = 10^3^kbps = 10^6^bps</p>
+<p><strong>2、宽带</strong></p>
+<p><strong>概念：</strong>单位时间内从网络中一个点到另一个点的==最高数据率(b/s)==。</p>
+<p><img src="https://img-blog.csdnimg.cn/b5e11cb1fb674cf5ab13e9cf6d89f692.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p><strong>3、吞吐量：</strong>单位时间内通过某个网络的数据量。</p>
+<p>假设主机A和服务器B接入到互联网的链路速率分别是100Mbit/s和1Gbit/s，在链路容量足够大的情况下，交换数据时的吞吐量显然是100Mbit/s。下面这个图能清晰地说明这个情况。</p>
+<p><img src="https://img-blog.csdnimg.cn/433cf2a2c0ae4d3bac56b8344a0f8290.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p><strong>4、时延：</strong>数据从网络的一端传送到另一端所需的时间。是很重要的==性能指标==，有时也称为==延迟或迟延==。</p>
+<p><strong>（1）发送时延：</strong>是主机或路由器==发送数据帧==所需要的时间，也叫做传输时延（尽量不采用这个名词，会和后面的搞混）。计算公式是：</p>
+<script type="math/tex; mode=display">
+发送时延=\frac{数据帧长度(bit)}{发送速率(bit/s)}</script><p><strong>（2）传播时延：</strong>是电磁波在信道中传播一定的距离需要花费的时间。计算公式是：</p>
+<script type="math/tex; mode=display">
+传播时延=\frac{信道长度(m)}{电磁波在信道上的传播速率(m/s)}</script><p>电磁波在自由空间上的传播速率是光速，在网络传输媒体中略低。铜线约为2.3*10^5^km/s，在光纤中约为2.0*10^5^km/s。</p>
+<p>这里给出一个图来更好地对这两个时延做一个区分</p>
+<p><img src="https://img-blog.csdnimg.cn/32051986eff04b28ba037011c5f61771.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p><strong>（3）处理时延：</strong>主机或路由器处理分组所花费的时间（&lt;ms）。</p>
+<p><strong>（4）排队时延：</strong>分组在路由器输入输出队列中==排队等待处理==所经历的时延（取决于路由器拥塞程度）。</p>
+<script type="math/tex; mode=display">
+总时延=发送时延+传播时延+处理时延+排队时延</script><p>这里可以看一下例题更清楚</p>
+<p><img src="https://img-blog.csdnimg.cn/dda3ab6d2829468b97ed9c2d127a0a97.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p><strong>5、时延带宽积：</strong>又称为以比特位单位的链路长度。</p>
+<script type="math/tex; mode=display">
+时延带宽积=传播时延\times带宽</script><p><strong>6、往返时间RTT：</strong>从发送方发送数据开始(不同的教材不一样，有些教材是从==发完==数据后开始计算的），到收到来自接收方的确认，总共经历的时间。也是一个很重要的==性能指标==。</p>
+<p> 这里引入一个概念==有效数据率==：</p>
+<script type="math/tex; mode=display">
+有效数据率=\frac{数据长度}{发送时间+RTT}//这里的RTT就是发送完数据后开始计算的</script><p><strong>7、利用率</strong></p>
+<p><strong>（1）信道利用率：</strong>指某信道有百分之几的时间是被利用的（有数据通过）。并非越高越好。</p>
+<p><strong>（2）网络利用率：</strong>整个网络的信道利用率的加权平均值。</p>
+<p>​    如果令D~0~表示网络空闲时的时延，D表示网络当前的时延（设现在的网络利用率为U），那么在适当的假定条件下，有下面的关系：</p>
+<script type="math/tex; mode=display">
+D=\frac{D_0}{1-U}</script><p>当网络利用率达到其容量的==1/2==时，时延就要==加倍==。因此我们要有这样的概念：信道利用率或网络利用率过高就会产生非常大的时延。</p>
+<p><strong>8、丢包率：</strong>丢失的分组数量与总分组数量的比率。</p>
+<p><strong>（1）分组丢失情况</strong></p>
+<ul>
+<li>因出现传输错误被丢弃</li>
+<li>因路由器拥塞而被丢弃</li>
+</ul>
+<p><strong>（2）</strong>丢包率反映网络拥塞情况<em>**</em></p>
+<ul>
+<li>1%-4%：轻度拥塞</li>
+<li>5%-15%：重度拥塞</li>
+</ul>
+<hr>
+<h2 id="六、计算机网络体系结构"><a href="#六、计算机网络体系结构" class="headerlink" title="六、计算机网络体系结构"></a>六、计算机网络体系结构</h2><h3 id="（一）常见体系结构"><a href="#（一）常见体系结构" class="headerlink" title="（一）常见体系结构"></a>（一）常见体系结构</h3><p><img src="https://img-blog.csdnimg.cn/d7a43f32ed064e6b8f86bfa838f439b5.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>其中，TCP/IP体系结构的表示如下图</p>
+<p><img src="https://img-blog.csdnimg.cn/295412ee284e45d3be8f6d9642ce4ac4.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>其中的网络接口层也叫做链路层或者子网层。现在人们经常提到的TCP/IP协议并不一定单指这两个协议，而往往表示互联网所使用的整个==TCP/IP协议族==。</p>
+<p>每层完成一种特定功能，每层==依赖下层==服务，同时==向上层==提供服务。</p>
+<p>这里我们以教学的五层体系结构来对每个层进行讲解。</p>
+<p><strong>1、物理层</strong></p>
+<p>​        在物理层所传输的数据单位是==比特==。所使用的==传输媒介==有双绞线、同轴电缆、光缆（<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%85%89%E7%BC%86/6931001?fr=aladdin">利用置于包覆护套中的一根或多根光纤作为传输媒质并可以单独或成组使用的通信线缆组件</a>）、无线信道等。要考虑多大的==电压==表示“1”和“0”。</p>
+<p>​    OSI参考模型把对等层次间传送的数据单位称为该层的协议数据单元PDU。</p>
+<p>​    协议栈的概念在课本P34出现过。</p>
+<p><strong>2、数据链路层</strong></p>
+<p>​        简称链路层。</p>
+<p>几个重要的知识点</p>
+<ul>
+<li>通过==MAC地址==标识网络中的主机</li>
+<li>通过==分组的封装格式==从比特流中区分出地址和数据</li>
+<li>通过==CSMA/CD协议==协调主句争用总线</li>
+</ul>
+<p>在传送数据时，链路层将网络层交下来的IP数据报组装成帧，每一帧包括数据和必要的控制信息（如同步信息、地址信息、差错控制等）。</p>
+<p>在接收数据时，控制信息使接收端能够知道一个帧从哪个比特开始和到哪个比特结束。控制信息还能检错，如发现有差错，链路层就简单地丢弃这个帧。如果需要改正出现的差错，就要采用可靠传输协议来纠正。这种方法会使链路层的协议复杂些。</p>
+<p><strong>3、网络层</strong></p>
+<p>​        负责为分组交换网上的不同==主机==提供通信服务。网络层把运输层产生的报文段或用户数据报封装成==分组（IP数据报，简称数据报）==或==包==进行传送。</p>
+<p>​        通过==IP地址==来识别不同的网络及网络中的主机。</p>
+<p>​        通过==路由协议==进行路由选择并转发分组。</p>
 
       </section>
 
@@ -253,7 +353,7 @@
         <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
 </svg>
-        <span>34</span>
+        <span>42</span>
       </div>
       <div class="count-box--item">
         <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -265,7 +365,7 @@
         <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
 </svg>
-        25
+        31
       </div>
     </div>
   </div>
@@ -305,13 +405,13 @@
       
         <li class="categorys-list-item">
           <a href="/categories/%E5%AE%89%E5%85%A8/">
-            安全 (23)
+            安全 (30)
           </a>
         </li>
       
         <li class="categorys-list-item">
           <a href="/categories/%E5%AD%A6%E7%A7%91/">
-            学科 (7)
+            学科 (8)
           </a>
         </li>
       
@@ -328,7 +428,7 @@
   </div>
   <div class="widget-body">
     <div class="tags-cloud">
-      <a href="/tags/user-in/" style="font-size: 10px;" class="tags-cloud-0">.user.in</a> <a href="/tags/CUDA/" style="font-size: 10px;" class="tags-cloud-0">CUDA</a> <a href="/tags/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/" style="font-size: 12px;" class="tags-cloud-2">PHP伪协议</a> <a href="/tags/c/" style="font-size: 10px;" class="tags-cloud-0">c++</a> <a href="/tags/data%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">data协议</a> <a href="/tags/http%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">http协议</a> <a href="/tags/mysql/" style="font-size: 10px;" class="tags-cloud-0">mysql</a> <a href="/tags/php%E4%BC%AA%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">php伪协议</a> <a href="/tags/python/" style="font-size: 10px;" class="tags-cloud-0">python</a> <a href="/tags/sql/" style="font-size: 10px;" class="tags-cloud-0">sql</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5/" style="font-size: 18px;" class="tags-cloud-8">sql注入</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 20px;" class="tags-cloud-10">代码审计</a> <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" style="font-size: 10px;" class="tags-cloud-0">反序列化</a> <a href="/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" style="font-size: 12px;" class="tags-cloud-2">命令执行漏洞</a> <a href="/tags/%E5%A0%86%E5%8F%A0%E6%B3%A8%E5%85%A5/" style="font-size: 12px;" class="tags-cloud-2">堆叠注入</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E6%9D%90%E6%96%99/" style="font-size: 10px;" class="tags-cloud-0">学习材料</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;" class="tags-cloud-0">数据结构</a> <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" style="font-size: 16px;" class="tags-cloud-6">文件上传漏洞</a> <a href="/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" style="font-size: 12px;" class="tags-cloud-2">文件包含漏洞</a> <a href="/tags/%E6%96%87%E4%BB%B6%E6%B3%84%E9%9C%B2/" style="font-size: 12px;" class="tags-cloud-2">文件泄露</a> <a href="/tags/%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/" style="font-size: 10px;" class="tags-cloud-0">文件解析漏洞</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/" style="font-size: 14px;" class="tags-cloud-4">概率论</a> <a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/" style="font-size: 10px;" class="tags-cloud-0">模板注入</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 14px;" class="tags-cloud-4">汇编</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 10px;" class="tags-cloud-0">计网</a>
+      <a href="/tags/user-in/" style="font-size: 10px;" class="tags-cloud-0">.user.in</a> <a href="/tags/CUDA/" style="font-size: 10px;" class="tags-cloud-0">CUDA</a> <a href="/tags/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/" style="font-size: 12px;" class="tags-cloud-2">PHP伪协议</a> <a href="/tags/SSRF/" style="font-size: 10px;" class="tags-cloud-0">SSRF</a> <a href="/tags/WEB-INFweb-xml%E6%B3%84%E9%9C%B2/" style="font-size: 10px;" class="tags-cloud-0">WEB-INFweb.xml泄露</a> <a href="/tags/c/" style="font-size: 10px;" class="tags-cloud-0">c++</a> <a href="/tags/data%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">data协议</a> <a href="/tags/git%E6%B3%84%E9%9C%B2/" style="font-size: 10px;" class="tags-cloud-0">git泄露</a> <a href="/tags/http%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">http协议</a> <a href="/tags/mysql/" style="font-size: 10px;" class="tags-cloud-0">mysql</a> <a href="/tags/php%E4%BC%AA%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">php伪协议</a> <a href="/tags/python/" style="font-size: 10px;" class="tags-cloud-0">python</a> <a href="/tags/sql/" style="font-size: 10px;" class="tags-cloud-0">sql</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5/" style="font-size: 20px;" class="tags-cloud-10">sql注入</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 18px;" class="tags-cloud-8">代码审计</a> <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" style="font-size: 10px;" class="tags-cloud-0">反序列化</a> <a href="/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" style="font-size: 12px;" class="tags-cloud-2">命令执行漏洞</a> <a href="/tags/%E5%A0%86%E5%8F%A0%E6%B3%A8%E5%85%A5/" style="font-size: 12px;" class="tags-cloud-2">堆叠注入</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E6%9D%90%E6%96%99/" style="font-size: 10px;" class="tags-cloud-0">学习材料</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;" class="tags-cloud-0">数据结构</a> <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" style="font-size: 16px;" class="tags-cloud-6">文件上传漏洞</a> <a href="/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" style="font-size: 12px;" class="tags-cloud-2">文件包含漏洞</a> <a href="/tags/%E6%96%87%E4%BB%B6%E6%B3%84%E9%9C%B2/" style="font-size: 12px;" class="tags-cloud-2">文件泄露</a> <a href="/tags/%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/" style="font-size: 10px;" class="tags-cloud-0">文件解析漏洞</a> <a href="/tags/%E6%97%A0%E5%8F%82%E6%95%B0RCE/" style="font-size: 10px;" class="tags-cloud-0">无参数RCE</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/" style="font-size: 14px;" class="tags-cloud-4">概率论</a> <a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/" style="font-size: 10px;" class="tags-cloud-0">模板注入</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 16px;" class="tags-cloud-6">汇编</a> <a href="/tags/%E7%9B%B2%E6%B3%A8/" style="font-size: 10px;" class="tags-cloud-0">盲注</a> <a href="/tags/%E8%81%94%E5%90%88%E6%B3%A8%E5%85%A5/" style="font-size: 10px;" class="tags-cloud-0">联合注入</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 10px;" class="tags-cloud-0">计网</a>
     </div>
   </div>
 </section>

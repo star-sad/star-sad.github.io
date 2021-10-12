@@ -195,9 +195,39 @@
 <h3 id="（二）、指令功能组"><a href="#（二）、指令功能组" class="headerlink" title="（二）、指令功能组"></a>（二）、指令功能组</h3><h4 id="1-、数据传送类指令"><a href="#1-、数据传送类指令" class="headerlink" title="1 、数据传送类指令"></a>1 、数据传送类指令</h4><p>​    是最基本、最重要的一种操作。==除==标志寄存器传送指令外，均==不影响标志位==。</p>
 <p>重点掌握：<strong>MOV、XCHG、PUSH、POP、LEA</strong></p>
 <p><strong>（1）MOV 指令：</strong>目的操作数可以是reg、mem和seg（段寄存器，如DS等），除了reg可以传给三个外，其余的只能传给其他两个，特殊的，立即数（imm）只能给reg和mem。</p>
-<p><strong>注：</strong>目的操作数==不能==是CS及立即数，CS寄存器的内容是由操作系统给出的。</p>
+<p><strong>注：</strong></p>
+<ul>
+<li>目的操作数==不能==是CS及立即数，CS寄存器的内容是由操作系统给出的。</li>
+<li>两个存储单元间不能直接传送数据。（可通过寄存器）两个内存单元间不能进行操作，适用于所有指令。</li>
+</ul>
+<p><strong>非法传送：</strong>两个操作数类型不一致</p>
 <p><strong>eg：</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MOV reg/mem/seg, reg</span><br><span class="line">MOV reg/mem, imm</span><br><span class="line">MOV reg/seg, mem</span><br><span class="line">MOV reg/mem, seg</span><br></pre></td></tr></table></figure>
+<p><strong>这里补充两个指令：</strong></p>
+<p>​    ①==MOVSX==带符号扩展传送指令（80386及其后继机型可用）</p>
+<p>​    指令格式：MOVSX  DEST，SRC</p>
+<p>​    指令功能：DEST⇦符号扩展（SRC）。</p>
+<p>​    该指令的源操作数可以是8位或16位的寄存器或存储单元的内容，而目的操作数必须是16位或32位寄存器，传送时将源操作数==进行符号扩展后==送入目的寄存器，8位数据可以符号扩展到16位或32位，是16位数据也可以符号扩展到32位。</p>
+<p>​    受影响的状态标志位：无。</p>
+<p>​    <strong>eg：</strong></p>
+<ul>
+<li><p>指令“MOVSX EAX，CL”把CL寄存器中的8位数符号扩展为32位数，送到EAX寄存器中。如果（CL）= F0H，该指令执行后（EAX）=  FFFFFFF0H。</p>
+</li>
+<li><p>指令“MOVSX EDX，[EDI]”把DS段中以EDI内容为指针所指向的字单元中的16位数，符号扩展为32位数，送到EDX寄存器中。</p>
+</li>
+</ul>
+<p>​    ②==MOVZX==带零扩展传送指令（80386及其后继机型可用）</p>
+<p>​    指令格式：MOVZX  DEST，SRC</p>
+<p>​    指令功能： DESTÜ零扩展（SRC）。</p>
+<p>​    有关源操作数和目的操作数以及对标志位的影响均与MOVSX相同。它们的差别只是MOVSX的源操作数是带符号数，可作符号扩展；而MOVZX的源操作数应是无符号整数，可作零扩展（不管源操作数的符号位是否为1，高位均扩展为零）。</p>
+<p>​    MOVSX和MOVZX指令与一般双操作数指令的差别是：一般双操作数指令的源操作数和目的操作数的长度是相同的，但MOVSX和MOVZX的源操作数长度一定小于目的操作数长度。</p>
+<p>​    <strong>eg：</strong></p>
+<ul>
+<li>指令“MOVZX DX，AL”把AL寄存器中的8位数，零扩展成16位数，送到DX寄存器中。如果（AL）= F0H，该指令执行后（DX）= 00F0H。</li>
+<li>指令“MOVZX EAX，DATA”把DATA字单元中的16位数，零扩展为32位数，送到EAX寄存器中。</li>
+</ul>
+<hr>
+<p>回到mov指令</p>
 <p><strong>①立即数传送（即源操作数是imm）</strong></p>
 <p>​    这里我们要特别注意，一旦目的操作数是mem的话，我们要==指明==他的大小，是==字节量还是字量==。</p>
 <p>其中==BYTE PTR==和==WORD PTR== 分别表示内存的1个字节单元和1个字单元。</p>
@@ -210,14 +240,147 @@
 <p><strong>③存储器传送</strong></p>
 <p>​    会根据目的操作数的大小来确定传送的内存单元大小。</p>
 <p><strong>eg：</strong></p>
-<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">MOV</span>  <span class="built_in">DS</span>, [<span class="built_in">BX</span>]    ；<span class="built_in">BX</span>寄存器所指的l内存单元的内容送<span class="built_in">DS</span></span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">AX</span>, [<span class="number">2050H</span>] ；有效地址为<span class="number">2050H</span>的连续两个内存单元的内容传送<span class="built_in">AX</span></span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">AL</span>, [<span class="number">2050H</span>] ；有效地址为<span class="number">2050H</span>的内存单元的内容送<span class="built_in">AX</span></span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">AL</span>, [<span class="built_in">SI</span>+<span class="number">50H</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">MOV</span>  <span class="built_in">DS</span>, [<span class="built_in">BX</span>]    ；<span class="built_in">BX</span>寄存器所指的l内存单元的内容送<span class="built_in">DS</span></span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">AX</span>, [<span class="number">2050H</span>] ；有效地址为<span class="number">2050H</span>的连续两个内存单元的内容传送<span class="built_in">AX</span></span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">AL</span>, [<span class="number">2050H</span>] ；有效地址为<span class="number">2050H</span>的内存单元的内容送<span class="built_in">AL</span></span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">AL</span>, [<span class="built_in">SI</span>+<span class="number">50H</span>]</span><br></pre></td></tr></table></figure>
 <p><strong>④段寄存器传送</strong></p>
-<p>​    </p>
-<p><strong>② 算术运算类指令</strong></p>
-<p><strong>③ 位操作类指令</strong></p>
-<p><strong> 串操作类指令</strong></p>
-<p><strong>⑤ 控制转移类指令</strong></p>
-<p><strong>⑥ 处理机控制类指令</strong></p>
+<p>​    段寄存器想要之间传输要有过度。</p>
+<p><strong>eg:</strong></p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">MOV</span> [<span class="built_in">SI</span>],<span class="built_in">DS</span></span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>,<span class="built_in">ES</span>	；<span class="built_in">AX</span>←<span class="built_in">ES</span></span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">DS</span>,<span class="built_in">AX</span>	；<span class="built_in">DS</span>←<span class="built_in">AX</span>←<span class="built_in">ES</span></span><br></pre></td></tr></table></figure>
+<p><strong>MOV指令的传送限制图</strong></p>
+<p><img src="D:\tools\Typora\IMAGE\image-20211006213403768.png" alt="image-20211006213403768"></p>
+<p><strong>（2）交换指令XCHG</strong></p>
+<p>​    把两个地方的数据（内容）进行交换</p>
+<p><strong>格式</strong></p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">XCHG <span class="keyword">reg</span>,<span class="keyword">reg</span>/mem ；<span class="keyword">reg</span> ↔ <span class="keyword">reg</span>/mem</span><br></pre></td></tr></table></figure>
+<p><strong>eg：寄存器和存储器交换</strong></p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">xchg</span> <span class="built_in">ax</span>,[<span class="number">2000h</span>]	；字交换</span><br><span class="line">；等同于 <span class="keyword">xchg</span> [<span class="number">2000h</span>],<span class="built_in">ax</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">xchg</span> <span class="built_in">al</span>,[<span class="number">2000h</span>] 	；字节交换</span><br><span class="line">；等同于 <span class="keyword">xchg</span> [<span class="number">2000h</span>],<span class="built_in">al</span></span><br></pre></td></tr></table></figure>
+<p><strong>（3）查表指令XLAT</strong></p>
+<p>​    将BX指定的缓冲区中、AL指定的位移处的一个字节数据取出赋给AL。即把待查表格的一个字节内容送到AL累加器中。</p>
+<p><strong>过程：</strong>执行前，将待查表格的首地址TABLE先送至BX寄存器，然后将偏移量送到AL中；执行后，将有效地址为(BX) + (AL) 的内存单元的内容传送给AL。</p>
+<p><strong>指令格式：</strong></p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">XLAT</span> TABLE</span><br><span class="line">或 <span class="keyword">XLAT</span></span><br></pre></td></tr></table></figure>
+<p>​    指令中没有出现AL和BX寄存器，在指令中没有出现的寄存器称为隐含寄存器。</p>
+<p><strong>（4）堆栈指令</strong></p>
+<p>​    堆栈：后进先出FILO，位于堆栈段；SS段寄存器记录其段地址</p>
+<p>​    堆栈只有一个出口，即当前栈顶；用堆栈指针寄存器SP指定</p>
+<p>​    <strong>①PUSH进栈指令</strong></p>
+<p>​    指令功能：首先修改堆栈指针SP或ESP的内容，然后将源操作数压入栈顶单元中。源操作数可以是立即数、寄存器（含段寄存器）或存储单元的内容，但8086不能使用立即数。</p>
+<p>具体操作可表示如下：</p>
+<p>操作数16位：SP或ESP ←（SP或ESP）-2</p>
+<p>​                        栈顶字单元 ←（SRC）</p>
+<p>操作数32位：SP或ESP ←（SP或ESP）- 4</p>
+<p>​                        栈顶双字单元 ←（SRC）</p>
+<p>受影响的状态标志位：无。</p>
+<p><strong>注意</strong>：堆栈的存取必须以==字或双字==为单位（<strong>不允许字节堆栈</strong>），所以PUSH和POP指令只能进行字或双字操作。</p>
+<p>​    <strong>②POP出栈指令</strong></p>
+<p>​    指令功能：首先将SP或ESP指向的栈顶单元的内容弹出到目的寄存器或存储单元中，然后修改SP或ESP指向栈顶。目的地址可采用寄存器（除CS外）或存储器寻址方式，但不能是立即寻址。具体操作可表示如下：</p>
+<p>操作数16位：DEST ← 栈顶字单元内容</p>
+<pre><code>                    SP或ESP ←（SP或ESP）+2
+</code></pre><p>操作数32位：DEST ← 栈顶双字单元内容</p>
+<pre><code>                    SP或ESP ←（SP或ESP）+4
+</code></pre><p>受影响的状态标志位：无。</p>
+<p><strong>（5）标志传送指令</strong></p>
+<p><strong>①LAHF:</strong>标志位送AH指令</p>
+<p>​    功能：取标志寄存器（PSW、FLAGS）低八位传送到AH。不影响标志寄存器内容。</p>
+<p><strong>②SAHF：</strong>AH送标志寄存器指令</p>
+<p>​    功能：(AH) → flags(低8位)，影响SF、ZF、AF、PF、CF标志。</p>
+<p><strong>③PUSHF：</strong>标志进栈指令</p>
+<p>​    功能：flags → stack</p>
+<p><strong>④POPF：</strong>标志出栈指令</p>
+<p>​    功能：stack → flags</p>
+<p>PUSHF和POPF主要用于子程序和中断过程中对PSW内容的保护和恢复。</p>
+<p><strong>（6）地址传送指令</strong></p>
+<p><strong>①LEA：</strong>有效地址指令</p>
+<p>​    功能：将有效地址（偏移地址）传送到指定的寄存器中。</p>
+<p>​    OPD可为一个16\32位的通用寄存器，通常为：BX、BP、SI、DI。OPS可为变量名、标号或地址表达式。</p>
+<p><strong>eg：</strong></p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LEA</span>  <span class="built_in">BP</span>，[<span class="number">3000H</span>] <span class="comment">; BP=3000H</span></span><br><span class="line"><span class="keyword">LEA</span>  <span class="built_in">BX</span>,[<span class="built_in">BX</span>+<span class="built_in">DI</span>] <span class="comment">; BX=BX+DI</span></span><br><span class="line"><span class="keyword">LEA</span>  <span class="built_in">SI</span>,[<span class="built_in">DI</span>] <span class="comment">; SI=DI</span></span><br></pre></td></tr></table></figure>
+<p><strong>②LDS、LES：</strong>取地址指令</p>
+<p>​    功能：将源操作数指定的4个相继字节传送到指定的寄存器（LDS通常是SI，LES通常是DI）==及==DS或者ES段寄存器中。（各自两个字节）</p>
+<h4 id="2、算术运算类指令"><a href="#2、算术运算类指令" class="headerlink" title="2、算术运算类指令"></a>2、算术运算类指令</h4><p><strong>（1）加法指令</strong></p>
+<p>​    影响CF、AF、OF、PF、SF、ZF标志位。INC不影响CF。</p>
+<p>​    ADD、ADC（+CF）、INC（+1）</p>
+<p><strong>（2）减法指令</strong></p>
+<p>​    SUB、SBB（-CF）、DEC（-1）</p>
+<p><strong>（3）求补指令</strong></p>
+<p>​    NEG：用零减去操作数，结果返回操作数。（按位取反+1）</p>
+<p>​    对0求补时，CF=0，其它情况CF=1</p>
+<p>​    功能:  改变操作数的符号</p>
+<p>​     NEG属于减法指令。</p>
+<p><strong>（4）比较指令</strong></p>
+<p>​    CMP  OPD,OPS</p>
+<p>无符号比较：CF=0表示OPD&gt;OPS；CF=1则相反</p>
+<p>有符号比较：在转移指令中讨论</p>
+<p><strong>（4）乘法指令</strong></p>
+<p>​    标志位：影响CF和OF，其他无定义。</p>
+<p><strong>①无符号数</strong> </p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MUL  OPD ； OPD可以是reg/mem，不能是立即数，操作数为mem要指明大小</span><br><span class="line">truetruetrueOPD为字节: <span class="comment">(AX)</span> ← <span class="comment">(AL)</span> * <span class="comment">(OPD)</span></span><br><span class="line">truetrue    OPD为字 :  <span class="comment">(DX ,AX)</span>←<span class="comment">(AX)</span>* <span class="comment">(OPD)</span> </span><br></pre></td></tr></table></figure>
+<p>乘积的高一半为0，则CF=OF=0，反之为1。</p>
+<p><strong>② 有符号数</strong></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">IMUL</span>  OPD；和无符号类似，多了符号</span><br></pre></td></tr></table></figure>
+<p>乘积的高一半为低一半的符号扩展，则CF=OF=0，反之为1。</p>
+<p><strong>（5）除法指令</strong></p>
+<p>对标志位影响：没有定义</p>
+<p><strong>①无符号数</strong> </p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">DIV</span>  <span class="selector-tag">opd</span>；<span class="selector-tag">OPD</span>可以是<span class="selector-tag">reg</span>/<span class="selector-tag">mem</span>，不能是立即数，操作数为<span class="selector-tag">mem</span>要指明大小</span><br><span class="line">truetrue  字节操作：(AL)←(AX)/(opd)的商</span><br><span class="line">                  (AH)←(AX)/(opd)的余数</span><br><span class="line">truetrue  字操作： (AX)←(DX，AX)/(opd)的商</span><br><span class="line">       			  (DX)←(DX，AX)/(opd)的余数 </span><br></pre></td></tr></table></figure>
+<p><strong>② 有符号数</strong></p>
+<p>​    IDIV</p>
+<p><strong>（6）符号扩展指令</strong></p>
+<p>​    CBW；    执行操作：将(AL)的符号扩展到AH，构成字(AX)。</p>
+<p>​    CWD；    执行操作：将(AX)的符号扩展到DX。</p>
+<p><strong>（7）十进制数调整指令</strong></p>
+<p><strong>①压缩BCD码加法DAA</strong></p>
+<ul>
+<li><p>指令之前必须执行ADD或ADC指令</p>
+</li>
+<li><p>若AF=1或AL低4位是A~F,则AL+06H,AF置1</p>
+</li>
+<li><p>若CF=1或AL高4位是A~F,则AL+60H,CF置1</p>
+</li>
+<li><p>对OF无定义，但影响其他标志位</p>
+</li>
+</ul>
+<p><strong>②压缩BCD码减法DAS</strong></p>
+<ul>
+<li><p>指令之前必须执行SUB或SBB指令</p>
+</li>
+<li><p>若AF=1或AL低4位是A~F,则AL-06H,AF置1</p>
+</li>
+<li><p>若CF=1或AL高4位是A~F,则AL-60H,CF置1</p>
+</li>
+<li><p>对OF无定义，但影响其他标志位</p>
+</li>
+</ul>
+<p><strong>③非压缩BCD码加法AAA</strong></p>
+<ul>
+<li>指令之前必须执行ADD或ADC指令</li>
+<li>若AF=1或AL低4位是A~F,则AL+06H，AH+1，AF置1，清除AL高4位（变为0），AF位的值送CF位；否则清除高4位。</li>
+<li>除影响AF和CF标志外，其余标志位均无定义</li>
+</ul>
+<p><strong>④非压缩BCD码减法AAS</strong></p>
+<ul>
+<li>指令之前必须执行SUB或SBB指令</li>
+<li>若AF=1或AL低4位是A~F,则AL-06H，AH-1，AF置1，清除AL高4位（变为0），AF位的值送CF位；否则清除高4位。</li>
+<li>除影响AF和CF标志外，其余标志位均无定义</li>
+</ul>
+<p><strong>⑤</strong></p>
+<p><strong>⑥</strong></p>
+<h4 id="3、逻辑运算指令"><a href="#3、逻辑运算指令" class="headerlink" title="3、逻辑运算指令"></a>3、逻辑运算指令</h4><p>​    它们对标志位的影响情况是：NOT指令不影响标志位，其它4种指令将使CF和OF为0，AF位无定义，而SF、ZF和PF则根据运算结果设置。</p>
+<p><strong>（1）逻辑与运算指令AND</strong></p>
+<p><strong>（2）逻辑或运算指令OR</strong></p>
+<p><strong>（3）逻辑非NOT</strong></p>
+<p>​    NOT不允许使用立即数</p>
+<p><strong>（4）逻辑异或XOR</strong></p>
+<p>​    功能：使操作数的某些位取反或测试两数是否相等</p>
+<p><strong>（5）测试指令TEST</strong></p>
+<p>​    功能：检测某种条件是否满足</p>
+<p>​    注意：与AND指令基本相同，但两个操作数相与的结果==不保存==，只根据其特征置标志位。</p>
+<h4 id="4、移位指令"><a href="#4、移位指令" class="headerlink" title="4、移位指令"></a>4、移位指令</h4><p><strong>（1）</strong></p>
+<p>①</p>
+<p>② </p>
+<p>③ 位操作类指令</p>
+<p>④ 串操作类指令</p>
+<p>⑤ 控制转移类指令</p>
+<p>⑥ 处理机控制类指令</p>
 
       </section>
 
@@ -288,7 +451,7 @@
         <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
 </svg>
-        <span>34</span>
+        <span>42</span>
       </div>
       <div class="count-box--item">
         <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -300,7 +463,7 @@
         <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
 </svg>
-        25
+        31
       </div>
     </div>
   </div>
@@ -340,13 +503,13 @@
       
         <li class="categorys-list-item">
           <a href="/categories/%E5%AE%89%E5%85%A8/">
-            安全 (23)
+            安全 (30)
           </a>
         </li>
       
         <li class="categorys-list-item">
           <a href="/categories/%E5%AD%A6%E7%A7%91/">
-            学科 (7)
+            学科 (8)
           </a>
         </li>
       
@@ -363,7 +526,7 @@
   </div>
   <div class="widget-body">
     <div class="tags-cloud">
-      <a href="/tags/user-in/" style="font-size: 10px;" class="tags-cloud-0">.user.in</a> <a href="/tags/CUDA/" style="font-size: 10px;" class="tags-cloud-0">CUDA</a> <a href="/tags/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/" style="font-size: 12px;" class="tags-cloud-2">PHP伪协议</a> <a href="/tags/c/" style="font-size: 10px;" class="tags-cloud-0">c++</a> <a href="/tags/data%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">data协议</a> <a href="/tags/http%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">http协议</a> <a href="/tags/mysql/" style="font-size: 10px;" class="tags-cloud-0">mysql</a> <a href="/tags/php%E4%BC%AA%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">php伪协议</a> <a href="/tags/python/" style="font-size: 10px;" class="tags-cloud-0">python</a> <a href="/tags/sql/" style="font-size: 10px;" class="tags-cloud-0">sql</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5/" style="font-size: 18px;" class="tags-cloud-8">sql注入</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 20px;" class="tags-cloud-10">代码审计</a> <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" style="font-size: 10px;" class="tags-cloud-0">反序列化</a> <a href="/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" style="font-size: 12px;" class="tags-cloud-2">命令执行漏洞</a> <a href="/tags/%E5%A0%86%E5%8F%A0%E6%B3%A8%E5%85%A5/" style="font-size: 12px;" class="tags-cloud-2">堆叠注入</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E6%9D%90%E6%96%99/" style="font-size: 10px;" class="tags-cloud-0">学习材料</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;" class="tags-cloud-0">数据结构</a> <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" style="font-size: 16px;" class="tags-cloud-6">文件上传漏洞</a> <a href="/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" style="font-size: 12px;" class="tags-cloud-2">文件包含漏洞</a> <a href="/tags/%E6%96%87%E4%BB%B6%E6%B3%84%E9%9C%B2/" style="font-size: 12px;" class="tags-cloud-2">文件泄露</a> <a href="/tags/%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/" style="font-size: 10px;" class="tags-cloud-0">文件解析漏洞</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/" style="font-size: 14px;" class="tags-cloud-4">概率论</a> <a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/" style="font-size: 10px;" class="tags-cloud-0">模板注入</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 14px;" class="tags-cloud-4">汇编</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 10px;" class="tags-cloud-0">计网</a>
+      <a href="/tags/user-in/" style="font-size: 10px;" class="tags-cloud-0">.user.in</a> <a href="/tags/CUDA/" style="font-size: 10px;" class="tags-cloud-0">CUDA</a> <a href="/tags/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/" style="font-size: 12px;" class="tags-cloud-2">PHP伪协议</a> <a href="/tags/SSRF/" style="font-size: 10px;" class="tags-cloud-0">SSRF</a> <a href="/tags/WEB-INFweb-xml%E6%B3%84%E9%9C%B2/" style="font-size: 10px;" class="tags-cloud-0">WEB-INFweb.xml泄露</a> <a href="/tags/c/" style="font-size: 10px;" class="tags-cloud-0">c++</a> <a href="/tags/data%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">data协议</a> <a href="/tags/git%E6%B3%84%E9%9C%B2/" style="font-size: 10px;" class="tags-cloud-0">git泄露</a> <a href="/tags/http%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">http协议</a> <a href="/tags/mysql/" style="font-size: 10px;" class="tags-cloud-0">mysql</a> <a href="/tags/php%E4%BC%AA%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">php伪协议</a> <a href="/tags/python/" style="font-size: 10px;" class="tags-cloud-0">python</a> <a href="/tags/sql/" style="font-size: 10px;" class="tags-cloud-0">sql</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5/" style="font-size: 20px;" class="tags-cloud-10">sql注入</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 18px;" class="tags-cloud-8">代码审计</a> <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" style="font-size: 10px;" class="tags-cloud-0">反序列化</a> <a href="/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" style="font-size: 12px;" class="tags-cloud-2">命令执行漏洞</a> <a href="/tags/%E5%A0%86%E5%8F%A0%E6%B3%A8%E5%85%A5/" style="font-size: 12px;" class="tags-cloud-2">堆叠注入</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E6%9D%90%E6%96%99/" style="font-size: 10px;" class="tags-cloud-0">学习材料</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;" class="tags-cloud-0">数据结构</a> <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" style="font-size: 16px;" class="tags-cloud-6">文件上传漏洞</a> <a href="/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" style="font-size: 12px;" class="tags-cloud-2">文件包含漏洞</a> <a href="/tags/%E6%96%87%E4%BB%B6%E6%B3%84%E9%9C%B2/" style="font-size: 12px;" class="tags-cloud-2">文件泄露</a> <a href="/tags/%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/" style="font-size: 10px;" class="tags-cloud-0">文件解析漏洞</a> <a href="/tags/%E6%97%A0%E5%8F%82%E6%95%B0RCE/" style="font-size: 10px;" class="tags-cloud-0">无参数RCE</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/" style="font-size: 14px;" class="tags-cloud-4">概率论</a> <a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/" style="font-size: 10px;" class="tags-cloud-0">模板注入</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 16px;" class="tags-cloud-6">汇编</a> <a href="/tags/%E7%9B%B2%E6%B3%A8/" style="font-size: 10px;" class="tags-cloud-0">盲注</a> <a href="/tags/%E8%81%94%E5%90%88%E6%B3%A8%E5%85%A5/" style="font-size: 10px;" class="tags-cloud-0">联合注入</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 10px;" class="tags-cloud-0">计网</a>
     </div>
   </div>
 </section>
