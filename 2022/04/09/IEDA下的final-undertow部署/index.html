@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#3367D6"/>
+  <link rel="apple-touch-icon" href="/icons-192.png">
+  <link rel="manifest" href="/manifest.json">
+
+  <meta name="generator" content="Hexo 5.4.0">
+
+  
+    <meta name="description" content="小白">
+  
+
+  
+
+  
+    <meta name="author" content="molls">
+  
+
+  
+
+  
+
+  <title>IEDA下的final-undertow部署 | Molls&#39; blog</title>
+
+  
+
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@1.1.3/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/monokai.css">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+  <div class="root-container">
+    
+<!-- header container -->
+<header class="header-container post">
+  
+    <div class="post-image" style="background-image: url(https://qiniu.sukoshi.xyz/src/images/68686407_p0.jpg)"></div>
+  
+
+  <!-- navbar -->
+<nav class="navbar">
+  <div class="navbar-content">
+    <!-- logo -->
+    <div class="navbar-logo">
+      <a href="/">
+        
+          Molls&#39; blog
+        
+      </a>
+    </div>
+    <!-- link -->
+    <div class="navbar-link">
+      <div class="navbar-btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <ul class="navbar-list">
+        
+          <li class="navbar-list-item"><a href="/">首页</a></li>
+        
+          <li class="navbar-list-item"><a href="/message">message</a></li>
+        
+          <li class="navbar-list-item"><a href="/about">about</a></li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+    <div class="header-content">
+      <div class="post-text layout-block">
+        <div class="layout-margin">
+          <h1 class="title-wrap">IEDA下的final-undertow部署</h1>
+          <h2 class="title-sub-wrap">
+            <strong>molls</strong>
+            <span>发布于</span>
+            <time  class="article-date" datetime="2022-04-09T01:35:56.798Z" itemprop="datePublished">2022-04-09</time>
+          </h2>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">📒 程序设计</a></li>
+  
+</ul>
+          <ul class="wrap-list dark">
+  
+    <li><a href="/tags/IDEA/">🏷️ IDEA</a></li>
+  
+    <li><a href="/tags/final/">🏷️ final</a></li>
+  
+    <li><a href="/tags/undertow/">🏷️ undertow</a></li>
+  
+</ul>
+        </div>
+      </div>
+    </div>
+  
+
+  
+  
+  
+</header>
+
+    <!-- 文章 -->
+
+<!-- 文章内容 -->
+<div class="body-container">
+  <article class="content-container layout-block post-container">
+    <div class="article-info">
+      
+      
+      
+      
+      <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
+        <p>[TOC]</p>
+<h2 id="部署步骤"><a href="#部署步骤" class="headerlink" title="部署步骤"></a>部署步骤</h2><h3 id="1、修改pom-xml文件"><a href="#1、修改pom-xml文件" class="headerlink" title="1、修改pom.xml文件"></a>1、修改pom.xml文件</h3><p>1、将打包类型修改为jar文件</p>
+<p><img src="https://img-blog.csdnimg.cn/7b211c5378974592b98a4a23b1d0502b.png" alt="将packaging标签内容修改为jar"></p>
+<p>2、添加插件、资源</p>
+<p>在<strong>\<build\></strong>标签中添加如下代码</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span><span class="comment">&lt;!--资源标签--&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">includes</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.tld<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>false<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在<strong>\<resource\></strong>标签后继续添加插件，代码如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">encoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">encoding</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">compilerArgument</span>&gt;</span>-parameters<span class="tag">&lt;/<span class="name">compilerArgument</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">compilerArguments</span>&gt;</span><span class="tag">&lt;<span class="name">verbose</span> /&gt;</span><span class="tag">&lt;/<span class="name">compilerArguments</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">      jar 包中的配置文件优先级高于 config 目录下的 &quot;同名文件&quot;</span></span><br><span class="line"><span class="comment">      因此，打包时需要排除掉 jar 包中来自 src/main/resources 目录的</span></span><br><span class="line"><span class="comment">      配置文件，否则部署时 config 目录中的同名配置文件不会生效</span></span><br><span class="line"><span class="comment">     --&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jar-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">excludes</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>*.txt<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>*.xml<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>*.properties<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">archive</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">manifest</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">addClasspath</span>&gt;</span>true<span class="tag">&lt;/<span class="name">addClasspath</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span>demo.StartMain<span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span> <span class="comment">&lt;!-- 此处为主入口--&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">         使用 mvn clean package 打包</span></span><br><span class="line"><span class="comment">         更多配置可参考官司方文档：http://maven.apache.org/plugins/maven-assembly-plugin/single-mojo.html</span></span><br><span class="line"><span class="comment">     --&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">id</span>&gt;</span>make-assembly<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">goal</span>&gt;</span>single<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line"></span><br><span class="line">           <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">             <span class="comment">&lt;!-- 打包生成的文件名 --&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">finalName</span>&gt;</span>$&#123;project.artifactId&#125;<span class="tag">&lt;/<span class="name">finalName</span>&gt;</span></span><br><span class="line">             <span class="comment">&lt;!-- jar 等压缩文件在被打包进入 zip、tar.gz 时是否压缩，设置为 false 可加快打包速度 --&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">recompressZippedFiles</span>&gt;</span>false<span class="tag">&lt;/<span class="name">recompressZippedFiles</span>&gt;</span></span><br><span class="line">             <span class="comment">&lt;!-- 打包生成的文件是否要追加 release.xml 中定义的 id 值 --&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">appendAssemblyId</span>&gt;</span>true<span class="tag">&lt;/<span class="name">appendAssemblyId</span>&gt;</span></span><br><span class="line">             <span class="comment">&lt;!-- 指向打包描述文件 package.xml --&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">descriptors</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">descriptor</span>&gt;</span>package.xml<span class="tag">&lt;/<span class="name">descriptor</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;/<span class="name">descriptors</span>&gt;</span></span><br><span class="line">             <span class="comment">&lt;!-- 打包结果输出的基础目录 --&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>$&#123;project.build.directory&#125;/<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最终效果：</p>
+<p><img src="https://img-blog.csdnimg.cn/0791d928d0d74916ae06a771a6aa3f62.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<h3 id="2、添加package-xml文件"><a href="#2、添加package-xml文件" class="headerlink" title="2、添加package.xml文件"></a>2、添加package.xml文件</h3><p>​    在项目的根目录下添加该文件，如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/3fc2873643944187857147e76f043543.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_18,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>文件内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">assembly</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/ASSEMBLY/2.0.0&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">true</span><br><span class="line">true<span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">		assembly 打包配置更多配置可参考官方文档：</span></span><br><span class="line"><span class="comment">			http://maven.apache.org/plugins/maven-assembly-plugin/assembly.html</span></span><br><span class="line"><span class="comment">	 --&gt;</span></span><br><span class="line">true<span class="tag">&lt;<span class="name">id</span>&gt;</span>release<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">true<span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">		设置打包格式，可同时设置多种格式，常用格式有：dir、zip、tar、tar.gz</span></span><br><span class="line"><span class="comment">			dir 格式便于在本地测试打包结果</span></span><br><span class="line"><span class="comment">			zip 格式便于 windows 系统下解压运行</span></span><br><span class="line"><span class="comment">			tar、tar.gz 格式便于 linux 系统下解压运行</span></span><br><span class="line"><span class="comment">	 --&gt;</span></span><br><span class="line">true<span class="tag">&lt;<span class="name">formats</span>&gt;</span></span><br><span class="line">truetrue<span class="tag">&lt;<span class="name">format</span>&gt;</span>dir<span class="tag">&lt;/<span class="name">format</span>&gt;</span></span><br><span class="line">truetrue<span class="tag">&lt;<span class="name">format</span>&gt;</span>zip<span class="tag">&lt;/<span class="name">format</span>&gt;</span></span><br><span class="line">truetrue<span class="comment">&lt;!-- &lt;format&gt;tar.gz&lt;/format&gt; --&gt;</span></span><br><span class="line">true<span class="tag">&lt;/<span class="name">formats</span>&gt;</span></span><br><span class="line">true</span><br><span class="line">true<span class="comment">&lt;!-- 打 zip 设置为 true 时，会在 zip 包中生成一个根目录，打 dir 时设置为 false 少层目录 --&gt;</span></span><br><span class="line">true<span class="tag">&lt;<span class="name">includeBaseDirectory</span>&gt;</span>true<span class="tag">&lt;/<span class="name">includeBaseDirectory</span>&gt;</span></span><br><span class="line">true</span><br><span class="line">true<span class="tag">&lt;<span class="name">fileSets</span>&gt;</span></span><br><span class="line">truetrue<span class="comment">&lt;!-- src/main/resources 全部 copy 到 config 目录下 --&gt;</span></span><br><span class="line">truetrue<span class="tag">&lt;<span class="name">fileSet</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;basedir&#125;/src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>config<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></span><br><span class="line">truetrue<span class="tag">&lt;/<span class="name">fileSet</span>&gt;</span></span><br><span class="line">truetrue</span><br><span class="line">truetrue<span class="comment">&lt;!-- src/main/webapp 全部 copy 到 webapp 目录下 --&gt;</span></span><br><span class="line">truetrue<span class="tag">&lt;<span class="name">fileSet</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;basedir&#125;/src/main/webapp<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>webapp<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">excludes</span>&gt;</span></span><br><span class="line">truetruetruetrue<span class="comment">&lt;!-- **/* 前缀用法，可以匹配所有路径，例如：**/*.txt --&gt;</span></span><br><span class="line">truetruetruetrue<span class="tag">&lt;<span class="name">exclude</span>&gt;</span>WEB-INF<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></span><br><span class="line">truetruetruetrue<span class="tag">&lt;<span class="name">exclude</span>&gt;</span>WEB-INF/web.xml<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;/<span class="name">excludes</span>&gt;</span></span><br><span class="line">truetrue<span class="tag">&lt;/<span class="name">fileSet</span>&gt;</span></span><br><span class="line">truetrue</span><br><span class="line">truetrue<span class="comment">&lt;!-- 项目根下面的脚本文件 copy 到根目录下 --&gt;</span></span><br><span class="line">truetrue<span class="tag">&lt;<span class="name">fileSet</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;basedir&#125;<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span><span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></span><br><span class="line">truetruetrue<span class="comment">&lt;!-- 脚本文件在 linux 下的权限设为 755，无需 chmod 可直接运行 --&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">fileMode</span>&gt;</span>755<span class="tag">&lt;/<span class="name">fileMode</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">lineEnding</span>&gt;</span>unix<span class="tag">&lt;/<span class="name">lineEnding</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">includes</span>&gt;</span></span><br><span class="line">truetruetruetrue<span class="tag">&lt;<span class="name">include</span>&gt;</span>*.sh<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">truetrue<span class="tag">&lt;/<span class="name">fileSet</span>&gt;</span></span><br><span class="line">truetrue</span><br><span class="line">truetrue<span class="tag">&lt;<span class="name">fileSet</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;basedir&#125;<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span><span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">fileMode</span>&gt;</span>755<span class="tag">&lt;/<span class="name">fileMode</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">lineEnding</span>&gt;</span>windows<span class="tag">&lt;/<span class="name">lineEnding</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">includes</span>&gt;</span></span><br><span class="line">truetruetruetrue<span class="tag">&lt;<span class="name">include</span>&gt;</span>*.bat<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">truetrue<span class="tag">&lt;/<span class="name">fileSet</span>&gt;</span></span><br><span class="line">true<span class="tag">&lt;/<span class="name">fileSets</span>&gt;</span></span><br><span class="line">true</span><br><span class="line">true<span class="comment">&lt;!-- 依赖的 jar 包 copy 到 lib 目录下 --&gt;</span></span><br><span class="line">true<span class="tag">&lt;<span class="name">dependencySets</span>&gt;</span></span><br><span class="line">truetrue<span class="tag">&lt;<span class="name">dependencySet</span>&gt;</span></span><br><span class="line">truetruetrue<span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>lib<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span>			</span><br><span class="line">truetrue<span class="tag">&lt;/<span class="name">dependencySet</span>&gt;</span></span><br><span class="line">true<span class="tag">&lt;/<span class="name">dependencySets</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">assembly</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="3、添加-bat文件（Windows下）"><a href="#3、添加-bat文件（Windows下）" class="headerlink" title="3、添加.bat文件（Windows下）"></a>3、添加.bat文件（Windows下）</h3><p>同样在项目根目录下添加该文件，文件内容如下：</p>
+<font color="#999AAA">这里我使用的是第26行的方式（即28行）</font>
+
+<figure class="highlight vb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">@echo <span class="keyword">off</span></span><br><span class="line"></span><br><span class="line"><span class="comment">rem -------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">rem</span></span><br><span class="line"><span class="comment">rem 使用说明：</span></span><br><span class="line"><span class="comment">rem</span></span><br><span class="line"><span class="comment">rem 1: 该脚本用于别的项目时只需要修改 MAIN_CLASS 即可运行</span></span><br><span class="line"><span class="comment">rem</span></span><br><span class="line"><span class="comment">rem 2: JAVA_OPTS 可通过 -D 传入 undertow.port 与 undertow.host 这类参数覆盖</span></span><br><span class="line"><span class="comment">rem    配置文件中的相同值此外还有 undertow.resourcePath, undertow.ioThreads</span></span><br><span class="line"><span class="comment">rem    undertow.workerThreads 共五个参数可通过 -D 进行传入</span></span><br><span class="line"><span class="comment">rem</span></span><br><span class="line"><span class="comment">rem 3: JAVA_OPTS 可传入标准的 java 命令行参数,例如 -Xms256m -Xmx1024m 这类常用参数</span></span><br><span class="line"><span class="comment">rem</span></span><br><span class="line"><span class="comment">rem</span></span><br><span class="line"><span class="comment">rem -------------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line">setlocal &amp; pushd</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">rem 启动入口类(即src/main/java下的main函数所在的类),该脚本文件用于别的项目时要改这里</span></span><br><span class="line"><span class="keyword">set</span> MAIN_CLASS=demo.StartMain</span><br><span class="line"></span><br><span class="line"><span class="comment">rem Java 命令行参数,根据需要开启下面的配置,改成自己需要的,注意等号前后不能有空格</span></span><br><span class="line"><span class="comment">rem set &quot;JAVA_OPTS=-Xms256m -Xmx1024m -Dundertow.port=8080 -Dundertow.host=0.0.0.0&quot;</span></span><br><span class="line"><span class="comment">rem set &quot;JAVA_OPTS=-Dundertow.port=8080 -Dundertow.host=0.0.0.0&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> JAVA_OPTS=-Dundertow.port=<span class="number">8080</span> -Dundertow.host=<span class="number">0.0</span>.<span class="number">0.0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;%1&quot;</span>==<span class="string">&quot;start&quot;</span> <span class="keyword">goto</span> normal</span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;%1&quot;</span>==<span class="string">&quot;stop&quot;</span> <span class="keyword">goto</span> normal</span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;%1&quot;</span>==<span class="string">&quot;restart&quot;</span> <span class="keyword">goto</span> normal</span><br><span class="line"></span><br><span class="line"><span class="keyword">goto</span> <span class="keyword">error</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">:<span class="keyword">error</span></span><br><span class="line">echo Usage: jfinal.bat start | <span class="keyword">stop</span> | restart</span><br><span class="line"><span class="keyword">goto</span> :eof</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">:normal</span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;%1&quot;</span>==<span class="string">&quot;start&quot;</span> <span class="keyword">goto</span> start</span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;%1&quot;</span>==<span class="string">&quot;stop&quot;</span> <span class="keyword">goto</span> <span class="keyword">stop</span></span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;%1&quot;</span>==<span class="string">&quot;restart&quot;</span> <span class="keyword">goto</span> restart</span><br><span class="line"><span class="keyword">goto</span> :eof</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">:start</span><br><span class="line"><span class="keyword">set</span> APP_BASE_PATH=%~dp0</span><br><span class="line"><span class="keyword">set</span> CP=%APP_BASE_PATH%config;%APP_BASE_PATH%<span class="keyword">lib</span>\*</span><br><span class="line">echo starting jfinal undertow</span><br><span class="line">java -Xverify:none %JAVA_OPTS% -cp %CP% %MAIN_CLASS%</span><br><span class="line"><span class="comment">rem java -Xverify:none -Dundertow.port=8080 -Dundertow.host=0.0.0.0 -cp config;lib\* demo.StartMain</span></span><br><span class="line"><span class="keyword">goto</span> :eof</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">:<span class="keyword">stop</span></span><br><span class="line"><span class="keyword">set</span> <span class="string">&quot;PATH=%JAVA_HOME%\bin;%PATH%&quot;</span></span><br><span class="line">echo stopping jfinal undertow</span><br><span class="line"><span class="keyword">for</span> /f <span class="string">&quot;tokens=1&quot;</span> %%i <span class="keyword">in</span> (<span class="comment">&#x27;jps -l ^| find &quot;%MAIN_CLASS%&quot;&#x27;) do ( taskkill /F /PID %%i )</span></span><br><span class="line"><span class="keyword">goto</span> :eof</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">:restart</span><br><span class="line"><span class="keyword">call</span> :<span class="keyword">stop</span></span><br><span class="line"><span class="keyword">call</span> :start</span><br><span class="line"><span class="keyword">goto</span> :eof</span><br><span class="line"></span><br><span class="line">endlocal &amp; popd</span><br><span class="line">pause</span><br></pre></td></tr></table></figure>
+<p><strong>==注意：==</strong></p>
+<p>1、22行的入口启动类要改</p>
+<p>2、28行的端口要根据自己写的代码中的端口进行修改，我这里是本地的8080端口</p>
+<p><img src="https://img-blog.csdnimg.cn/7de279bd79424021a98809d779db6089.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>3、请注意53和54行代码，后面会提到</p>
+<h3 id="4、web-xml文件的更正（可能存在问题的）"><a href="#4、web-xml文件的更正（可能存在问题的）" class="headerlink" title="4、web.xml文件的更正（可能存在问题的）"></a>4、web.xml文件的更正（可能存在问题的）</h3><p>在webapp文件夹下存在一个WEB-INF文件夹，展开有web.xml的文件，内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">web-app</span> <span class="meta-keyword">PUBLIC</span></span></span><br><span class="line"><span class="meta"> <span class="meta-string">&quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;</span></span></span><br><span class="line"><span class="meta"> <span class="meta-string">&quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot;</span> &gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">web-app</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">display-name</span>&gt;</span>Archetype Created Web Application<span class="tag">&lt;/<span class="name">display-name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>jfinal<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 这里一定要引用JFinal的过滤器 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>com.jfinal.core.JFinalFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 要注意这里一定要配置为configClass，且注意大小写 --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>configClass<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- 引用了自定义的配置类，同样是在src/main/java目录下的 --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>demo.DemoConfig<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>jfinal<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">web-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="5、打包"><a href="#5、打包" class="headerlink" title="5、打包"></a>5、打包</h3><p>根据jfinal官方文档的描述，只需要进入项目根目录，执行<code>mvn clean package</code>就好了。当然，如果没有对电脑进行maven的环境变量配置的话，是行不通的。</p>
+<p>这里，我们直接用IDEA来实现，有两种办法。</p>
+<p>1、找IDEA右侧的一个小窗口（Maven），如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/ca04240b382b4cc48ac5a7ac4229d4cf.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>点击，出现如下窗口，双击clean，再双击package</p>
+<p><img src="https://img-blog.csdnimg.cn/5ace8d9246144e5e855b2f77ceeb20c7.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>当控制台都提示了成功的信息后，我们就会发现根目录下的targe里多了一些文件，如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/f7afdf6b4d7f4e27b24e0cad346e8dc4.png" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/e82cb712830c44d7bfa6398a0d04aacb.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>2、第二种方法，就是自己构造命令</p>
+<p>点击右上方如下图所示的地方</p>
+<p><img src="https://img-blog.csdnimg.cn/9c89803cd3a44ef88c731bc365802ed3.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_18,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>点击加号</p>
+<p><img src="https://img-blog.csdnimg.cn/6dd6f4e76f5e4b93929ddb9892f401b3.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>选择maven</p>
+<p><img src="https://img-blog.csdnimg.cn/29635f3290c3485888cc0fd671e75fba.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_19,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>随便起一个名字，写上构造的命令<code>clean package</code></p>
+<p><img src="https://img-blog.csdnimg.cn/c5ec7af00c494fb2b47a651a4b75f20f.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>点击ok即可</p>
+<p>我这里起的名字是cleanPackage，选中它直接点击运行即可</p>
+<p><img src="https://img-blog.csdnimg.cn/081438f5bc2e48528b939c9e4bcffd2d.png" alt="在这里插入图片描述"></p>
+<h2 id="运行步骤"><a href="#运行步骤" class="headerlink" title="运行步骤"></a>运行步骤</h2><p>找到zip存在的目录，进入release文件，找到jfinal.bat文件的位置，然后在位置栏输入cmd并回车，在cmd窗口输入<code>jfinal.bat start</code>执行.bat文件。</p>
+<p><img src="https://img-blog.csdnimg.cn/ff845b31c2ae434fae2f92170fc70a87.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<h2 id="出现的问题"><a href="#出现的问题" class="headerlink" title="出现的问题"></a>出现的问题</h2><h3 id="1、packa-xml网址报红"><a href="#1、packa-xml网址报红" class="headerlink" title="1、packa.xml网址报红"></a>1、packa.xml网址报红</h3><p>有一个在添加package.xml文件的时候遇到的一个小问题，就是开头的url网络地址报红只要将问题报错复制去网上找很快就能找到。（具体的记不起来了）</p>
+<h3 id="2、打包的时候打包不出zip和release文件"><a href="#2、打包的时候打包不出zip和release文件" class="headerlink" title="2、打包的时候打包不出zip和release文件"></a>2、打包的时候打包不出zip和release文件</h3><p>我之前打包的时候，一直没有zip文件，当时我改了web.xml文件的一个configClass的位置配置，后面就好了。</p>
+<p>在打包的命令方面，可能单单运行<code>clean package</code>不太行，我们可以参照上面的方式，先运行<code>install</code>，再运行<code>clean compile package</code>。</p>
+<h3 id="3、运行-bat文件报错"><a href="#3、运行-bat文件报错" class="headerlink" title="3、运行.bat文件报错"></a>3、运行.bat文件报错</h3><p>运行该文件可能会报错：<code>找不到或无法加载主类 IDEA</code></p>
+<p><img src="https://img-blog.csdnimg.cn/3ce0a45d892048f9b9a482295b9b3293.png" alt="在这里插入图片描述"></p>
+<p>这种原因有很多，有可能是jdk等原因，也有可能是你没有写主类入口，如果按照上面的步骤来的话，应该不会是这种原因。总之就是它的主类路径找不到。</p>
+<p>我这边报错的原因是因为路径的问题，我的这个路径存在空格字符，所以会找不到类的文件。</p>
+<p>可以将这个文件转移到其他的路径下运行，或者是将上面的.bat文件进行修改，在上面的53行前加上<code>rem</code>注释掉，把54行的<code>rem</code>删掉即可。</p>
+<p><img src="https://img-blog.csdnimg.cn/476a4c01200d4388a28f3873b148f02e.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>运行完后，我们就可以用<code>http:localhost:8080/hell</code>（根据自己的代码情况）来访问了。</p>
+<p><img src="https://img-blog.csdnimg.cn/4748f30c7892434787c48c803dd895ff.png" alt="在这里插入图片描述"></p>
+
+      </section>
+
+      
+      
+        <nav class="article-nav">
+          
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+    <div class="card-text">
+      
+        <a href="/2021/11/24/%E6%90%AD%E5%BB%BAftp%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">搭建FTP服务器</h2>
+        </a>
+      
+      <div class="card-text--row">Older</div>
+    </div>
+  </article>
+</div>
+          
+        </nav>
+      
+
+      <section class="page-message-container layout-padding">
+        
+
+
+  
+  
+
+  
+  
+
+
+      </section>
+    </div>
+    <div class="widget-info">
+      <section class="widget-author widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-body">
+    
+      <img src="https://s.gravatar.com/avatar/2d6b803eea37de0257620d5fabee7e64?s=200&amp;r=g&amp;d=retro" class="soft-size--round soft-style--box" alt="Molls">
+    
+    
+      <h2>Molls</h2>
+    
+    
+      <p>贵在坚持</p>
+    
+
+    <div class="count-box">
+      <div class="count-box--item">
+        <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
+</svg>
+        <span>48</span>
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+        4
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+        35
+      </div>
+    </div>
+  </div>
+</section>
+
+      
+
+      
+<section class="widet-notice widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-notice" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M512 945.02305225v28.15620663a24.27259221 24.27259221 0 0 1-24.27259221 24.27259335H394.0352a48.54518557 48.54518557 0 0 1-41.74885888-23.78714112l-110.68302222-184.47170332a132.04290333 132.04290333 0 0 1-17.47626667-48.54518557h118.4502511a200.97706667 200.97706667 0 0 1 76.21594113 14.56355556l20.38897777 133.49925888a48.54518557 48.54518557 0 0 0 36.40888888 27.67075555l16.01991111 2.91271112a24.27259221 24.27259221 0 0 1 20.38897778 25.72894889zM997.45185223 463.45481443a194.18074112 194.18074112 0 0 1-38.8361489 116.50844445 24.75804445 24.75804445 0 0 1-36.4088889 0l-34.95253333-34.95253333a24.27259221 24.27259221 0 0 1-2.91271111-30.58346667 97.09036999 97.09036999 0 0 0 0-106.79940665 24.27259221 24.27259221 0 0 1 2.91271111-30.58346666l34.95253333-34.95253334a24.75804445 24.75804445 0 0 1 18.93262223-7.28177777 26.2144 26.2144 0 0 1 17.47626667 9.70903665A194.18074112 194.18074112 0 0 1 997.45185223 463.45481443z m-194.18074112-388.36148111v776.72296335a48.54518557 48.54518557 0 0 1-48.54518556 48.54518443h-28.64165888a48.54518557 48.54518557 0 0 1-33.98163001-14.07810332l-145.63555556-143.20829668A291.27111111 291.27111111 0 0 0 342.57730333 657.63555556H172.18370333a145.63555556 145.63555556 0 0 1-145.63555556-145.63555556v-97.09036999a145.63555556 145.63555556 0 0 1 145.63555556-145.63555556h170.3936a291.27111111 291.27111111 0 0 0 206.31703779-85.43952668l145.63555555-143.20829554a48.54518557 48.54518557 0 0 1 33.98162888-14.07810446H754.72592555a48.54518557 48.54518557 0 0 1 48.54518556 48.54518555z" fill="currentColor"></path>
+</svg>
+    <span>NOTICE</span>
+  </div>
+  <div class="widget-body">
+    <p>flex-block主题部分重构，详情查看https://github.com/miiiku/flex-block</p>
+  </div>
+</section>
+
+
+      <section class="widget-categorys widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+    <span>CATEGORYS</span>
+  </div>
+  <div class="widget-body">
+    <ul class="categorys-list">
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">
+            程序设计 (5)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E5%AE%89%E5%85%A8/">
+            安全 (33)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E5%AD%A6%E7%A7%91/">
+            学科 (9)
+          </a>
+        </li>
+      
+        <li class="categorys-list-item">
+          <a href="/categories/%E7%BD%91%E7%BB%9C/">
+            网络 (1)
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+</section>
+
+      <section class="widget-tags widget-item  layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+    <span>TAGS</span>
+  </div>
+  <div class="widget-body">
+    <div class="tags-cloud">
+      <a href="/tags/user-in/" style="font-size: 10px;" class="tags-cloud-0">.user.in</a> <a href="/tags/CUDA/" style="font-size: 10px;" class="tags-cloud-0">CUDA</a> <a href="/tags/FTP/" style="font-size: 10px;" class="tags-cloud-0">FTP</a> <a href="/tags/IDEA/" style="font-size: 10px;" class="tags-cloud-0">IDEA</a> <a href="/tags/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/" style="font-size: 12.5px;" class="tags-cloud-3">PHP伪协议</a> <a href="/tags/SSRF/" style="font-size: 10px;" class="tags-cloud-0">SSRF</a> <a href="/tags/WEB-INFweb-xml%E6%B3%84%E9%9C%B2/" style="font-size: 10px;" class="tags-cloud-0">WEB-INFweb.xml泄露</a> <a href="/tags/c/" style="font-size: 10px;" class="tags-cloud-0">c++</a> <a href="/tags/data%E5%8D%8F%E8%AE%AE/" style="font-size: 12.5px;" class="tags-cloud-3">data协议</a> <a href="/tags/final/" style="font-size: 10px;" class="tags-cloud-0">final</a> <a href="/tags/git%E6%B3%84%E9%9C%B2/" style="font-size: 12.5px;" class="tags-cloud-3">git泄露</a> <a href="/tags/http%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;" class="tags-cloud-0">http协议</a> <a href="/tags/mysql/" style="font-size: 10px;" class="tags-cloud-0">mysql</a> <a href="/tags/php%E4%BC%AA%E5%8D%8F%E8%AE%AE/" style="font-size: 12.5px;" class="tags-cloud-3">php伪协议</a> <a href="/tags/python/" style="font-size: 10px;" class="tags-cloud-0">python</a> <a href="/tags/sql/" style="font-size: 10px;" class="tags-cloud-0">sql</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5/" style="font-size: 20px;" class="tags-cloud-10">sql注入</a> <a href="/tags/undertow/" style="font-size: 10px;" class="tags-cloud-0">undertow</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 20px;" class="tags-cloud-10">代码审计</a> <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" style="font-size: 10px;" class="tags-cloud-0">反序列化</a> <a href="/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" style="font-size: 12.5px;" class="tags-cloud-3">命令执行漏洞</a> <a href="/tags/%E5%A0%86%E5%8F%A0%E6%B3%A8%E5%85%A5/" style="font-size: 12.5px;" class="tags-cloud-3">堆叠注入</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E6%9D%90%E6%96%99/" style="font-size: 10px;" class="tags-cloud-0">学习材料</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;" class="tags-cloud-0">数据结构</a> <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" style="font-size: 17.5px;" class="tags-cloud-8">文件上传漏洞</a> <a href="/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" style="font-size: 15px;" class="tags-cloud-5">文件包含漏洞</a> <a href="/tags/%E6%96%87%E4%BB%B6%E6%B3%84%E9%9C%B2/" style="font-size: 12.5px;" class="tags-cloud-3">文件泄露</a> <a href="/tags/%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E/" style="font-size: 10px;" class="tags-cloud-0">文件解析漏洞</a> <a href="/tags/%E6%97%A0%E5%8F%82%E6%95%B0RCE/" style="font-size: 10px;" class="tags-cloud-0">无参数RCE</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/" style="font-size: 17.5px;" class="tags-cloud-8">概率论</a> <a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/" style="font-size: 10px;" class="tags-cloud-0">模板注入</a> <a href="/tags/%E6%B1%87%E7%BC%96/" style="font-size: 17.5px;" class="tags-cloud-8">汇编</a> <a href="/tags/%E7%9B%B2%E6%B3%A8/" style="font-size: 10px;" class="tags-cloud-0">盲注</a> <a href="/tags/%E8%81%94%E5%90%88%E6%B3%A8%E5%85%A5/" style="font-size: 10px;" class="tags-cloud-0">联合注入</a> <a href="/tags/%E8%AE%A1%E7%BD%91/" style="font-size: 10px;" class="tags-cloud-0">计网</a>
+    </div>
+  </div>
+</section>
+    </div>
+  </article>
+</div>
+    
+    <!-- footer container -->
+<footer id="footer" class="footer">
+  <div class="footer-container">
+    
+    <div class="social-icons">
+      
+        
+      
+        
+      
+        
+      
+        
+          <a href="https://github.com/miiiku/" class="soft-size--primary soft-style--box" target="_blank" rel="noopener noreferrer">
+            <svg class="icon icon-github" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M64.6 512c0 195.6 125.4 361.9 300.1 422.9 23.5 5.9 19.9-10.8 19.9-22.2v-77.6c-135.8 15.9-141.3-74-150.5-89-18.5-31.5-61.9-39.5-49-54.5 31-15.9 62.5 4 98.9 58 26.4 39.1 77.9 32.5 104.1 26 5.7-23.5 17.9-44.5 34.7-60.9-140.7-25.2-199.4-111.1-199.4-213.3 0-49.5 16.4-95.1 48.4-131.8-20.4-60.6 1.9-112.4 4.9-120.1 58.2-5.2 118.5 41.6 123.3 45.3 33.1-8.9 70.8-13.7 112.9-13.7 42.4 0 80.3 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.4-43.9 2.9 7.7 24.7 58.3 5.5 118.1 32.5 36.8 49 82.8 49 132.4 0 102.3-59 188.3-200.2 213.2 23.5 23.3 38.1 55.5 38.1 91.1v112.7c0.8 9 0 17.9 15.1 17.9C832.7 877 960.4 709.4 960.4 512.1c0-247.5-200.6-447.9-447.9-447.9C265 64.1 64.6 264.5 64.6 512z"></path>
+</svg>
+          </a>
+        
+      
+        
+          <a href="https://twitter.com/guanquanhong" class="soft-size--primary soft-style--box" target="_blank" rel="noopener noreferrer">
+            <svg class="icon icon-twitter" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M962.285714 233.142857q-38.285714 56-92.571429 95.428571 0.571429 8 0.571429 24 0 74.285714-21.714286 148.285714t-66 142-105.428571 120.285714-147.428571 83.428571-184.571429 31.142857q-154.857143 0-283.428571-82.857143 20 2.285714 44.571429 2.285714 128.571429 0 229.142857-78.857143-60-1.142857-107.428571-36.857143t-65.142857-91.142857q18.857143 2.857143 34.857143 2.857143 24.571429 0 48.571429-6.285714-64-13.142857-106-63.714286t-42-117.428571l0-2.285714q38.857143 21.714286 83.428571 23.428571-37.714286-25.142857-60-65.714286t-22.285714-88q0-50.285714 25.142857-93.142857 69.142857 85.142857 168.285714 136.285714t212.285714 56.857143q-4.571429-21.714286-4.571429-42.285714 0-76.571429 54-130.571429t130.571429-54q80 0 134.857143 58.285714 62.285714-12 117.142857-44.571429-21.142857 65.714286-81.142857 101.714286 53.142857-5.714286 106.285714-28.571429z"></path>
+</svg>
+          </a>
+        
+      
+    </div>
+     
+    <p>&copy; 2022 <a href="/" target="_blank">molls</a></p>
+
+    
+
+    <p>Powered by <a href="https://hexo.io" target="_blank" rel="noopener noreferrer">Hexo</a> Theme - <a href="https://github.com/miiiku/flex-block" target="_blank" rel="noopener noreferrer author">flex-block</a></p>
+
+    <p>
+      <a href="javascript:;" id="theme-light">🌞 浅色</a>
+      <a href="javascript:;" id="theme-dark">🌛 深色</a>
+      <a href="javascript:;" id="theme-auto">🤖️ 自动</a>
+    </p>
+  </div>
+</footer>
+  </div>
+
+  <div class="back-to-top-fixed soft-size--round soft-style--box">
+    <svg class="icon icon-back-to-top" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <path d="M725.333333 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8l-213.333333-213.333333c-17.066667-17.066667-17.066667-42.666667 0-59.733333s42.666667-17.066667 59.733333 0l213.333333 213.333333c17.066667 17.066667 17.066667 42.666667 0 59.733333C746.666667 422.4 738.133333 426.666667 725.333333 426.666667z"></path>
+      <path d="M298.666667 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8-17.066667-17.066667-17.066667-42.666667 0-59.733333l213.333333-213.333333c17.066667-17.066667 42.666667-17.066667 59.733333 0s17.066667 42.666667 0 59.733333l-213.333333 213.333333C320 422.4 311.466667 426.666667 298.666667 426.666667z"></path>
+      <path d="M512 896c-25.6 0-42.666667-17.066667-42.666667-42.666667L469.333333 170.666667c0-25.6 17.066667-42.666667 42.666667-42.666667s42.666667 17.066667 42.666667 42.666667l0 682.666667C554.666667 878.933333 537.6 896 512 896z"></path>
+    </svg>
+  </div>
+
+  
+  <!-- aplayer -->
+
+
+<!-- dplayer -->
+
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+  <!-- 尾部用户自定义相关内容 -->
+</body>
+</html>
