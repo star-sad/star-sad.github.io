@@ -24,7 +24,7 @@
 
   
 
-  <title>绕过-[BJDCTF2020]Easy MD5 1 | Molls&#39; blog</title>
+  <title>BJDCTF2020 The mystery of ip 1 | Molls&#39; blog</title>
 
   
 
@@ -98,11 +98,11 @@
     <div class="header-content">
       <div class="post-text layout-block">
         <div class="layout-margin">
-          <h1 class="title-wrap">绕过-[BJDCTF2020]Easy MD5 1</h1>
+          <h1 class="title-wrap">BJDCTF2020 The mystery of ip 1</h1>
           <h2 class="title-sub-wrap">
             <strong>molls</strong>
             <span>发布于</span>
-            <time  class="article-date" datetime="2021-09-24T17:25:09.985Z" itemprop="datePublished">2021-09-25</time>
+            <time  class="article-date" datetime="2021-10-12T12:12:54.782Z" itemprop="datePublished">2021-10-12</time>
           </h2>
           <ul class="wrap-list dark">
   
@@ -111,7 +111,7 @@
 </ul>
           <ul class="wrap-list dark">
   
-    <li><a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">🏷️ 代码审计</a></li>
+    <li><a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/">🏷️ 模板注入</a></li>
   
 </ul>
         </div>
@@ -135,38 +135,18 @@
       
       
       <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
-        <p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#[BJDCTF2020]Easy%20MD5">题目来源</a></p>
-<p>打开题目网页，发现有一个get提交输入框：</p>
-<p><img src="https://img-blog.csdnimg.cn/930d10a28d244f49b390dd8f0a336f66.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>尝试了一下发现并不是sql注入，根据题目提示，与md5有关，那么我们抓包一下：</p>
-<p><img src="https://img-blog.csdnimg.cn/429efad4066c432d8983de6acd8ecb78.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>发现有提示，这里我们查一下md5函数带true的用法：</p>
-<p><img src="https://img-blog.csdnimg.cn/70a671b1f1e3454fa789b84d499ded46.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>通过百度，查出MD5()true参数漏洞，输入<code>ffifdyop</code>字符串就会造成漏洞，这里我在本地上试了一下，发现会转化成<code>&#39;or&#39;6É]™é!r,ùíb</code>一串，相当于数据库语句变成了<code>select * from ‘admin’ where password= &#39;&#39;or’6xxxxxx ’</code>为永真式。</p>
-<p><img src="https://img-blog.csdnimg.cn/30235caa837d426996d1894eb3353989.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_18,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>那么我们将<code>ffifdyop</code>字符输入进去：</p>
-<p><img src="https://img-blog.csdnimg.cn/6003896e9cd1404db72e3fd720386e2e.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>此时我们查看一下源码：</p>
-<p><img src="https://img-blog.csdnimg.cn/3f5dfd94f6b2498f8b3673fd4699f915.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_19,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>发现一段代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$a = $GET[&#x27;a&#x27;];</span><br><span class="line">$b = $_GET[&#x27;b&#x27;];</span><br><span class="line"></span><br><span class="line">if($a != $b &amp;&amp; md5($a) == md5($b))&#123;</span><br><span class="line">    // wow, glzjin wants a girl friend.</span><br></pre></td></tr></table></figure>
-<p>那么我们有两种方法来构造a和b。</p>
-<hr>
-<p><strong>1、找出md5值都是两个0e开头的开头的</strong></p>
-<p>这样做的目的是在后面进行双等号比较时进行一个绕过，因为是0e开头，php会认为它是科学技计数法，而0的多少次方都是0。这里给一些例子：<code>QNKCDZO</code>、<code>s155964671a</code>、<code>s1091221200a</code>。</p>
-<p><strong>2、数组绕过</strong></p>
-<p>原理是md5等函数不能处理数组，导致函数返回Null。而Null是等于Null的，导致了绕过。</p>
-<hr>
-<p>那么这里我们可以构造payload：<code>?a[]=1&amp;b[]=2</code>来进行绕过</p>
-<p><img src="https://img-blog.csdnimg.cn/bb817f83bb7343fe87a2e94e2999128b.png" alt="在这里插入图片描述"></p>
-<p>这里我们又发现了一段代码，可以看出这次是post提交，还有一个不同的地方就是这里的比较是三等号，这里我们可以看一下他们的区别：（<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Mrsm1th/p/6745532.html">更多详情</a>）</p>
-<p><img src="https://img-blog.csdnimg.cn/31d82a4b8b0d4470b990797d64289c5e.png" alt="在这里插入图片描述"></p>
-<p>那么这里，我们就不能使用第一种的绕过方法了，所以我们采用第二种绕过，构造post提交<code>param1[]=1&amp;param2[]=2</code>：</p>
-<p><img src="https://img-blog.csdnimg.cn/bb02cceb4fc847d18715a5e92e62523f.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>最终得到flag。</p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43622442/article/details/105662589">更多参考1</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45674567/article/details/107360632">更多参考2</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/freerats/article/details/107046439?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase">更多参考3</a></p>
+        <p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#[BJDCTF2020]The%20mystery%20of%20ip">题目来源</a></p>
+<p>复制链接，添加index.php</p>
+<p><img src="https://img-blog.csdnimg.cn/c07410e5e1a544858f7eec5836e4287c.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>点击flag，回显了ip，点提示，查看页面源代码，提示<code>Do you know why i know your ip?</code></p>
+<p><img src="https://img-blog.csdnimg.cn/8e821f7358c146f2b265a435034bcddc.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>此时，我们尝试添加客户端请求头<code>X-Forwarded-For</code>或者<code>client-ip</code>。猜测可能是<code>SSTI</code>，尝试输入<code>&#123;&#123;2*7&#125;&#125;</code></p>
+<p><img src="https://img-blog.csdnimg.cn/f53d9ce1deb04fdf84e617cffe9f663e.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>发现回显14，此时我们可以确定是<code>SSIT</code>，尝试输入<code>&#123;system(&#39;ls&#39;)&#125;</code>，发现可以，再次输入<code>&#123;system(&#39;cat /flag&#39;)&#125;</code></p>
+<p><img src="https://img-blog.csdnimg.cn/25901ec38d55403583a1b7d92acc1608.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>得到flag。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/mochu7777777/article/details/115835558">更多参考1</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_47940466/article/details/117754386">更多参考2</a></p>
 
       </section>
 
@@ -179,8 +159,8 @@
     
     <div class="card-text">
       
-        <a href="/2021/09/25/%E5%AD%A6%E7%A7%91/%E8%AE%A1%E7%BD%91%E7%AC%AC%E4%B8%80%E7%AB%A0/" itemprop="url">
-          <h2 class="card-text--title text-ellipsis">计网第一章</h2>
+        <a href="/2021/10/12/%E5%AD%A6%E7%A7%91/%E6%A6%82%E7%8E%87%E8%AE%BA/%E6%A6%82%E7%8E%87%E8%AE%BA%E7%AC%AC%E4%B8%89%E7%AB%A04%E3%80%815/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">独立随机变量和两个随机变量的函数分布</h2>
         </a>
       
       <div class="card-text--row">Newer</div>
@@ -194,8 +174,8 @@
     
     <div class="card-text">
       
-        <a href="/2021/09/24/%E5%AD%A6%E7%A7%91/%E6%A6%82%E7%8E%87%E8%AE%BA/%E6%A6%82%E7%8E%87%E8%AE%BA%E7%AC%AC%E4%B8%80%E7%AB%A0%E7%AC%94%E8%AE%B0/" itemprop="url">
-          <h2 class="card-text--title text-ellipsis">概率论第一章笔记</h2>
+        <a href="/2021/10/11/git%E6%B3%84%E9%9C%B2-%5BGXYCTF2019%5D%E7%A6%81%E6%AD%A2%E5%A5%97%E5%A8%83/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">git泄露-[GXYCTF2019]禁止套娃</h2>
         </a>
       
       <div class="card-text--row">Older</div>
