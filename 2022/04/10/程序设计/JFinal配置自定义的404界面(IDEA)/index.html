@@ -24,7 +24,7 @@
 
   
 
-  <title>模板注入-[护网杯 2018]easy_tornado 1 | Molls&#39; blog</title>
+  <title>JFinal配置自定义的404界面(IDEA) | Molls&#39; blog</title>
 
   
 
@@ -98,20 +98,24 @@
     <div class="header-content">
       <div class="post-text layout-block">
         <div class="layout-margin">
-          <h1 class="title-wrap">模板注入-[护网杯 2018]easy_tornado 1</h1>
+          <h1 class="title-wrap">JFinal配置自定义的404界面(IDEA)</h1>
           <h2 class="title-sub-wrap">
             <strong>molls</strong>
             <span>发布于</span>
-            <time  class="article-date" datetime="2021-09-23T04:48:50.761Z" itemprop="datePublished">2021-09-23</time>
+            <time  class="article-date" datetime="2022-04-10T08:52:58.027Z" itemprop="datePublished">2022-04-10</time>
           </h2>
           <ul class="wrap-list dark">
   
-    <li><a href="/categories/%E5%AE%89%E5%85%A8/">📒 安全</a></li>
+    <li><a href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">📒 程序设计</a></li>
   
 </ul>
           <ul class="wrap-list dark">
   
-    <li><a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/">🏷️ 模板注入</a></li>
+    <li><a href="/tags/IDEA/">🏷️ IDEA</a></li>
+  
+    <li><a href="/tags/undertow/">🏷️ undertow</a></li>
+  
+    <li><a href="/tags/Jfinal/">🏷️ Jfinal</a></li>
   
 </ul>
         </div>
@@ -135,31 +139,22 @@
       
       
       <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
-        <p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#[%E6%8A%A4%E7%BD%91%E6%9D%AF%202018]easy_tornado">题目来源</a></p>
-<p>打开题目网页，发现有三个网页链接。</p>
-<p><img src="https://img-blog.csdnimg.cn/883f7df362cf42299a172ed44b0210c6.png" alt="在这里插入图片描述"></p>
-<p>分别点开查看内容。</p>
-<p><img src="https://img-blog.csdnimg.cn/8914e88dc7a144babb807fb0bd453ce9.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/9b187930a9b0413da3f62a2807eed94b.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/2c7a0a1bb1674be487bd53ce361bc830.png" alt="在这里插入图片描述"></p>
-<p>从这些文件中我们不难看出flag在/fllllllllllllag文件下，而要想得到flag，必须要构造出<code>/file?filename=/fllllllllllllag&amp;filehash=md5(cookie_secret+md5(filename))</code>语句，那么我们现在要获取cookie_secret，通过查阅资料，可以知道在tornado模板中，存在一些可以快速访问的对象，例如：handler.settings(环境变量)，而cookie_secret就在handler.settings中。更多内容可以查看<a target="_blank" rel="noopener" href="https://xc1023.github.io/2021/07/17/%5B%E6%8A%A4%E7%BD%91%E6%9D%AF%202018%5Deasy_tornado(ssti%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E5%92%8Ctornado%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%EF%BC%89/\">这里</a></p>
-<p>那么我们就可以先构造<code>/file?filename=/fllllllllllllag&amp;filehash=&#123;&#123;1&#125;&#125;</code>来测试：</p>
-<p><img src="https://img-blog.csdnimg.cn/7f898d9200b14453a0328589590d0ca7.png" alt="在这里插入图片描述"></p>
-<p>发现跳转到了这个界面，那么我们可以用msg作为参数来测试，构造<code>/error?msg=&#123;&#123;1&#125;&#125;</code>：</p>
-<p><img src="https://img-blog.csdnimg.cn/ddd13b0342654092af60519346ecee8c.png" alt="在这里插入图片描述"></p>
-<p>发现确实是存在ssti注入的，那么我们就要获取我们的<code>cookie_secret</code>，构造语句<code>/error?msg=&#123;&#123;handler.settings&#125;&#125;</code>：</p>
-<p><img src="https://img-blog.csdnimg.cn/9ccb43b001204caca07e4bf32518812e.png" alt="在这里插入图片描述"></p>
-<p>得到了<code>cookie_secret</code>后，我们就可以来得到我们想要的<code>md5(cookie_secret+md5(filename))</code>了，我们可以使用php代码或者python代码来获取：</p>
-<p>php代码如下：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> md5(<span class="string">&#x27;db979c07-06a4-4836-8762-bf3aa26f1fc3&#x27;</span>.md5(<span class="string">&quot;/fllllllllllllag&quot;</span>));</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>python代码如下：</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line"></span><br><span class="line">s1=(hashlib<span class="selector-class">.md5</span>(<span class="string">&quot;/fllllllllllllag&quot;</span><span class="selector-class">.encode</span>()))<span class="selector-class">.hexdigest</span>()</span><br><span class="line"><span class="function"><span class="title">print</span><span class="params">((hashlib.md5((<span class="string">&quot;db979c07-06a4-4836-8762-bf3aa26f1fc3&quot;</span>+s1)</span></span><span class="selector-class">.encode</span>()))<span class="selector-class">.hexdigest</span>())</span><br></pre></td></tr></table></figure>
-<p>最终得到filehash：<code>862d0486d9a7fab4d540c60b5e7c4e0f</code></p>
-<p><img src="https://img-blog.csdnimg.cn/3539f88b2b4549bcbe1c490affa4584d.png" alt="在这里插入图片描述"></p>
-<p>构造出最终的payload：</p>
-<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/<span class="meta">file</span>?<span class="meta">filename</span>=/fllllllllllllag<span class="variable">&amp;filehash</span>=862d0486d9a7fab4d540c60b5e7c4e0f</span><br></pre></td></tr></table></figure>
-<p>最终得到了flag：</p>
-<p><img src="https://img-blog.csdnimg.cn/e274d5f284594f08b60f6115a8f2e127.png" alt="在这里插入图片描述"></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45642610/article/details/112519061">更多参考1</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45674567/article/details/106473603">更多参考2</a></p>
+        <h3 id="修改config类配置"><a href="#修改config类配置" class="headerlink" title="修改config类配置"></a>修改config类配置</h3><p>打开自定义的<code>JFinalConfig</code>类，在<code>configConstant</code>方法中配置404自定义页面，<code>me.setError404View(&quot;/err/My404.html&quot;)</code>如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/2ce0c288c290477b8d0909350b150a9b.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>然后在对应的<code>webapp</code>目录下添加对应的文件，先加入<code>err</code>文件，然后再<code>err</code>文件下添加<code>My404.html</code>文件。</p>
+<p><img src="https://img-blog.csdnimg.cn/bde9077ed3494f868a1efdcd2e3ff9d4.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_17,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>然后运行即可。</p>
+<h3 id="出现的问题"><a href="#出现的问题" class="headerlink" title="出现的问题"></a>出现的问题</h3><p>访问不存在的页面，显示如下</p>
+<p><img src="https://img-blog.csdnimg.cn/cd3d66061d394f3481642cb1a36380bb.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>是自带的404页面，并非是自己定义的。</p>
+<p>然后我重新做了一遍，发现，是<code>jfinal</code>依赖的版本的问题，这是我出问题的版本：</p>
+<p><img src="https://img-blog.csdnimg.cn/b4dcfd240a4b48b385520070bcc86fbd.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>这是可以运行的版本：</p>
+<p><img src="https://img-blog.csdnimg.cn/210a7ae0f39d45b6be171f52264ddfb7.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_19,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
+<p>改完之后再运行</p>
+<p><img src="https://img-blog.csdnimg.cn/a81000e5e6be4b369b852568f364eb49.png" alt="在这里插入图片描述"></p>
+<p>可以了，我。。。</p>
+<p>具体是什么原因，暂时还不清楚。</p>
 
       </section>
 
@@ -167,28 +162,14 @@
       
         <nav class="article-nav">
           
-            <div class="article-nav-item layout-padding">
-  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
-    
-    <div class="card-text">
-      
-        <a href="/2021/09/23/%E5%AD%A6%E7%A7%91/%E6%B1%87%E7%BC%96/%E6%B1%87%E7%BC%96%E7%AC%AC%E4%BA%8C%E5%91%A8%E4%BD%9C%E4%B8%9A1+%E7%AC%AC%E5%9B%9B%E6%AC%A1%E4%BD%9C%E4%B8%9A/" itemprop="url">
-          <h2 class="card-text--title text-ellipsis">汇编第二周作业1+第四次作业</h2>
-        </a>
-      
-      <div class="card-text--row">Newer</div>
-    </div>
-  </article>
-</div>
-          
           
             <div class="article-nav-item layout-padding">
   <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
     
     <div class="card-text">
       
-        <a href="/2021/09/23/sql%E6%B3%A8%E5%85%A5-%5B%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98%202019%5DBabySQL/" itemprop="url">
-          <h2 class="card-text--title text-ellipsis">sql注入-[极客大挑战 2019]BabySQL</h2>
+        <a href="/2022/04/09/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/IEDA%E4%B8%8B%E7%9A%84final-undertow%E9%83%A8%E7%BD%B2/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">IEDA下的final-undertow部署</h2>
         </a>
       
       <div class="card-text--row">Older</div>
