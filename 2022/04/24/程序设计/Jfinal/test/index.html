@@ -24,7 +24,7 @@
 
   
 
-  <title>JFinal配置自定义的404界面(IDEA) | Molls&#39; blog</title>
+  <title>test | Molls&#39; blog</title>
 
   
 
@@ -98,24 +98,16 @@
     <div class="header-content">
       <div class="post-text layout-block">
         <div class="layout-margin">
-          <h1 class="title-wrap">JFinal配置自定义的404界面(IDEA)</h1>
+          <h1 class="title-wrap">test</h1>
           <h2 class="title-sub-wrap">
             <strong>molls</strong>
             <span>发布于</span>
-            <time  class="article-date" datetime="2022-04-10T08:52:58.027Z" itemprop="datePublished">2022-04-10</time>
+            <time  class="article-date" datetime="2022-04-24T06:58:24.775Z" itemprop="datePublished">2022-04-24</time>
           </h2>
           <ul class="wrap-list dark">
   
-    <li><a href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">📒 程序设计</a></li>
-  
 </ul>
           <ul class="wrap-list dark">
-  
-    <li><a href="/tags/IDEA/">🏷️ IDEA</a></li>
-  
-    <li><a href="/tags/undertow/">🏷️ undertow</a></li>
-  
-    <li><a href="/tags/Jfinal/">🏷️ Jfinal</a></li>
   
 </ul>
         </div>
@@ -139,28 +131,14 @@
       
       
       <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
-        <h3 id="修改config类配置"><a href="#修改config类配置" class="headerlink" title="修改config类配置"></a>修改config类配置</h3><p>打开自定义的<code>JFinalConfig</code>类，在<code>configConstant</code>方法中配置404自定义页面，<code>me.setError404View(&quot;/err/My404.html&quot;)</code>如下：</p>
-<p><img src="https://img-blog.csdnimg.cn/2ce0c288c290477b8d0909350b150a9b.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>然后在对应的<code>webapp</code>目录下添加对应的文件，先加入<code>err</code>文件，然后再<code>err</code>文件下添加<code>My404.html</code>文件。</p>
-<p><img src="https://img-blog.csdnimg.cn/bde9077ed3494f868a1efdcd2e3ff9d4.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_17,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>然后运行即可。</p>
-<h3 id="出现的问题"><a href="#出现的问题" class="headerlink" title="出现的问题"></a>出现的问题</h3><p>访问不存在的页面，显示如下</p>
-<p><img src="https://img-blog.csdnimg.cn/cd3d66061d394f3481642cb1a36380bb.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>是自带的404页面，并非是自己定义的。</p>
-<p>然后我重新做了一遍，发现，是<code>jfinal</code>依赖的版本的问题，这是我出问题的版本：</p>
-<p><img src="https://img-blog.csdnimg.cn/b4dcfd240a4b48b385520070bcc86fbd.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_20,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>这是可以运行的版本：</p>
-<p><img src="https://img-blog.csdnimg.cn/210a7ae0f39d45b6be171f52264ddfb7.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAc2F0bmVz,size_19,color_FFFFFF,t_70,g_se,x_16" alt="在这里插入图片描述"></p>
-<p>改完之后再运行</p>
-<p><img src="https://img-blog.csdnimg.cn/a81000e5e6be4b369b852568f364eb49.png" alt="在这里插入图片描述"></p>
-<p>可以了，我。。。</p>
-<p>具体是什么原因，暂时还不清楚。</p>
+        <p><a href="/download/定期删除的.txt">下载测试</a></p>
 
       </section>
 
       
       
         <nav class="article-nav">
+          
           
             <div class="article-nav-item layout-padding">
   <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
@@ -169,21 +147,6 @@
       
         <a href="/2022/04/23/%E5%AD%A6%E7%A7%91/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%A4%9A%E7%BA%A7%E5%8F%8D%E9%A6%88%E9%98%9F%E5%88%97%E8%B0%83%E5%BA%A6/" itemprop="url">
           <h2 class="card-text--title text-ellipsis">多级反馈队列调度</h2>
-        </a>
-      
-      <div class="card-text--row">Newer</div>
-    </div>
-  </article>
-</div>
-          
-          
-            <div class="article-nav-item layout-padding">
-  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
-    
-    <div class="card-text">
-      
-        <a href="/2022/04/09/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/IEDA%E4%B8%8B%E7%9A%84final-undertow%E9%83%A8%E7%BD%B2/" itemprop="url">
-          <h2 class="card-text--title text-ellipsis">IEDA下的final-undertow部署</h2>
         </a>
       
       <div class="card-text--row">Older</div>
@@ -225,7 +188,7 @@
         <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
 </svg>
-        <span>51</span>
+        <span>52</span>
       </div>
       <div class="count-box--item">
         <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
