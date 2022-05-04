@@ -24,7 +24,7 @@
 
   
 
-  <title>模板注入-[护网杯 2018]easy_tornado 1 | Molls&#39; blog</title>
+  <title>hadoop的historyserver配置 | Molls&#39; blog</title>
 
   
 
@@ -98,20 +98,20 @@
     <div class="header-content">
       <div class="post-text layout-block">
         <div class="layout-margin">
-          <h1 class="title-wrap">模板注入-[护网杯 2018]easy_tornado 1</h1>
+          <h1 class="title-wrap">hadoop的historyserver配置</h1>
           <h2 class="title-sub-wrap">
             <strong>molls</strong>
             <span>发布于</span>
-            <time  class="article-date" datetime="2021-09-23T04:48:50.761Z" itemprop="datePublished">2021-09-23</time>
+            <time  class="article-date" datetime="2022-05-04T17:09:00.499Z" itemprop="datePublished">2022-05-05</time>
           </h2>
           <ul class="wrap-list dark">
   
-    <li><a href="/categories/%E5%AE%89%E5%85%A8/">📒 安全</a></li>
+    <li><a href="/categories/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">📒 程序设计</a></li>
   
 </ul>
           <ul class="wrap-list dark">
   
-    <li><a href="/tags/%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/">🏷️ 模板注入</a></li>
+    <li><a href="/tags/Hadoop/">🏷️ Hadoop</a></li>
   
 </ul>
         </div>
@@ -135,31 +135,29 @@
       
       
       <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
-        <p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#[%E6%8A%A4%E7%BD%91%E6%9D%AF%202018]easy_tornado">题目来源</a></p>
-<p>打开题目网页，发现有三个网页链接。</p>
-<p><img src="https://img-blog.csdnimg.cn/883f7df362cf42299a172ed44b0210c6.png" alt="在这里插入图片描述"></p>
-<p>分别点开查看内容。</p>
-<p><img src="https://img-blog.csdnimg.cn/8914e88dc7a144babb807fb0bd453ce9.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/9b187930a9b0413da3f62a2807eed94b.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/2c7a0a1bb1674be487bd53ce361bc830.png" alt="在这里插入图片描述"></p>
-<p>从这些文件中我们不难看出flag在/fllllllllllllag文件下，而要想得到flag，必须要构造出<code>/file?filename=/fllllllllllllag&amp;filehash=md5(cookie_secret+md5(filename))</code>语句，那么我们现在要获取cookie_secret，通过查阅资料，可以知道在tornado模板中，存在一些可以快速访问的对象，例如：handler.settings(环境变量)，而cookie_secret就在handler.settings中。更多内容可以查看<a target="_blank" rel="noopener" href="https://xc1023.github.io/2021/07/17/%5B%E6%8A%A4%E7%BD%91%E6%9D%AF%202018%5Deasy_tornado(ssti%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E5%92%8Ctornado%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%EF%BC%89/\">这里</a></p>
-<p>那么我们就可以先构造<code>/file?filename=/fllllllllllllag&amp;filehash=&#123;&#123;1&#125;&#125;</code>来测试：</p>
-<p><img src="https://img-blog.csdnimg.cn/7f898d9200b14453a0328589590d0ca7.png" alt="在这里插入图片描述"></p>
-<p>发现跳转到了这个界面，那么我们可以用msg作为参数来测试，构造<code>/error?msg=&#123;&#123;1&#125;&#125;</code>：</p>
-<p><img src="https://img-blog.csdnimg.cn/ddd13b0342654092af60519346ecee8c.png" alt="在这里插入图片描述"></p>
-<p>发现确实是存在ssti注入的，那么我们就要获取我们的<code>cookie_secret</code>，构造语句<code>/error?msg=&#123;&#123;handler.settings&#125;&#125;</code>：</p>
-<p><img src="https://img-blog.csdnimg.cn/9ccb43b001204caca07e4bf32518812e.png" alt="在这里插入图片描述"></p>
-<p>得到了<code>cookie_secret</code>后，我们就可以来得到我们想要的<code>md5(cookie_secret+md5(filename))</code>了，我们可以使用php代码或者python代码来获取：</p>
-<p>php代码如下：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> md5(<span class="string">&#x27;db979c07-06a4-4836-8762-bf3aa26f1fc3&#x27;</span>.md5(<span class="string">&quot;/fllllllllllllag&quot;</span>));</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>python代码如下：</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line"></span><br><span class="line">s1=(hashlib<span class="selector-class">.md5</span>(<span class="string">&quot;/fllllllllllllag&quot;</span><span class="selector-class">.encode</span>()))<span class="selector-class">.hexdigest</span>()</span><br><span class="line"><span class="function"><span class="title">print</span><span class="params">((hashlib.md5((<span class="string">&quot;db979c07-06a4-4836-8762-bf3aa26f1fc3&quot;</span>+s1)</span></span><span class="selector-class">.encode</span>()))<span class="selector-class">.hexdigest</span>())</span><br></pre></td></tr></table></figure>
-<p>最终得到filehash：<code>862d0486d9a7fab4d540c60b5e7c4e0f</code></p>
-<p><img src="https://img-blog.csdnimg.cn/3539f88b2b4549bcbe1c490affa4584d.png" alt="在这里插入图片描述"></p>
-<p>构造出最终的payload：</p>
-<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/<span class="meta">file</span>?<span class="meta">filename</span>=/fllllllllllllag<span class="variable">&amp;filehash</span>=862d0486d9a7fab4d540c60b5e7c4e0f</span><br></pre></td></tr></table></figure>
-<p>最终得到了flag：</p>
-<p><img src="https://img-blog.csdnimg.cn/e274d5f284594f08b60f6115a8f2e127.png" alt="在这里插入图片描述"></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45642610/article/details/112519061">更多参考1</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45674567/article/details/106473603">更多参考2</a></p>
+        <h2 id="hadoop的historyserver配置"><a href="#hadoop的historyserver配置" class="headerlink" title="hadoop的historyserver配置"></a>hadoop的historyserver配置</h2><p>Hadoop版本：3.1.3</p>
+<p><strong>tips:</strong>使用命令<code>hadoop version</code>查看</p>
+<h3 id="修改mapred-site-xml文件"><a href="#修改mapred-site-xml文件" class="headerlink" title="修改mapred-site.xml文件"></a>修改mapred-site.xml文件</h3><p>文件位置：hadoop(安装hadoop的目录，目录里面大致有如下内容)下的<code>etc/hadoop</code>目录当中。</p>
+<p><img src="https://img-blog.csdnimg.cn/0e6614a473024c71b7710e2f84605667.png" alt="在这里插入图片描述"></p>
+<p>在<code>configuration</code>中添加如下代码：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">value</span>&gt;</span>localhost:10020<span class="tag">&lt;/<span class="name">value</span>&gt;</span><span class="comment">&lt;!--这里的localhost为hadoop集群名称--&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>localhost:19888<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.done-dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/history/done<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.intermediate-done-dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/history/done_intermediate<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>tips：</strong><font color="#999AAA">集群名称可以在该文件夹(hadoop/etc/hadoop）下的<code>core-site.xml</code>文件中看到。</font></p>
+<p><img src="https://img-blog.csdnimg.cn/8f4fece7047c4930afdb390cb982659d.png" alt="在这里插入图片描述"></p>
+<h3 id="修改yarn-site-xml文件"><a href="#修改yarn-site-xml文件" class="headerlink" title="修改yarn-site.xml文件"></a>修改yarn-site.xml文件</h3><p>文件位置：和<code>mapred-site.xml</code>文件的路径一样。</p>
+<p>在<code>configuration</code>中添加如下代码：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.log-aggregation-enable<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="启动historyserver"><a href="#启动historyserver" class="headerlink" title="启动historyserver"></a>启动historyserver</h3><p>在sbin文件夹下输入<code>mr-jobhistory-daemon.sh start historyserver</code>就可以启动<code>historyserver</code>了，此时打开浏览器输入网址<code>localhost:19888</code>就可以访问了。</p>
+<p><img src="https://img-blog.csdnimg.cn/91435b2df6c74c8faa62084c1914453e.png" alt="在这里插入图片描述"></p>
+<h3 id="可能引发内存溢出"><a href="#可能引发内存溢出" class="headerlink" title="可能引发内存溢出"></a>可能引发内存溢出</h3><p>如果说我们处理的数据很大的话，同时我们分配给主机的内存又不够时，就有可能导致内存不够。</p>
+<p>有可能一个job，在你搭建<code>historyserver</code>之前是可以运行的，但是当你搭建好之后反而出现了问题（报错说进程被kill了，大致是<code>2.6GB of 2.1GB virtual memory used. Killing container</code>的）。</p>
+<p>当然对于工作量小的job是没有影响的。</p>
+<p><strong>解决方案：</strong></p>
+<p>在<code>mapred-site.xml</code>文件中添加如下代码</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.map.memory.mb<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">value</span>&gt;</span>2048<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在<code>yarn-site.xml</code>文件中添加如下代码：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.vmem-check-enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>false<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">   	<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.vmem-pmem-ratio<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>5<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>再次运行，就没问题了。</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lisi2016/p/6863923.html">参考文章</a></p>
 
       </section>
 
@@ -167,28 +165,14 @@
       
         <nav class="article-nav">
           
-            <div class="article-nav-item layout-padding">
-  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
-    
-    <div class="card-text">
-      
-        <a href="/2021/09/23/%E5%AD%A6%E7%A7%91/%E6%B1%87%E7%BC%96/%E6%B1%87%E7%BC%96%E7%AC%AC%E4%BA%8C%E5%91%A8%E4%BD%9C%E4%B8%9A1+%E7%AC%AC%E5%9B%9B%E6%AC%A1%E4%BD%9C%E4%B8%9A/" itemprop="url">
-          <h2 class="card-text--title text-ellipsis">汇编第二周作业1+第四次作业</h2>
-        </a>
-      
-      <div class="card-text--row">Newer</div>
-    </div>
-  </article>
-</div>
-          
           
             <div class="article-nav-item layout-padding">
   <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
     
     <div class="card-text">
       
-        <a href="/2021/09/23/sql%E6%B3%A8%E5%85%A5-%5B%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98%202019%5DBabySQL/" itemprop="url">
-          <h2 class="card-text--title text-ellipsis">sql注入-[极客大挑战 2019]BabySQL</h2>
+        <a href="/2022/05/03/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/CentOS/CentOS7U%E7%9B%98%E8%BF%9E%E6%8E%A5%E4%B8%8A%E5%8D%B4%E8%AF%BB%E5%8F%96%E4%B8%8D%E5%88%B0/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">CentOS7U盘连接上却读取不到</h2>
         </a>
       
       <div class="card-text--row">Older</div>
@@ -249,6 +233,18 @@
 </section>
 
       
+<section class="widget-toc widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-toc" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M134.50666666 767.46666668H460.8c27.73333333 0 50.24000001 22.50666668 50.24000001 50.23999999v50.13333333c0 27.73333333-22.50666668 50.24000001-50.24000001 50.24000001H134.50666666c-27.73333333 0-50.24000001-22.50666668-50.23999999-50.24000001v-50.13333333c0.10666668-27.73333333 22.50666668-50.24000001 50.24000001-50.24000001zM84.37333332 541.65333333h326.18666669c27.73333333 0 50.24000001 22.39999999 50.23999999 50.13333334v50.24000001c0 27.73333333-22.50666668 50.24000001-50.24000002 50.23999999H84.37333332c-27.73333333 0-50.24000001-22.50666668-50.23999999-50.23999999v-50.24000001c0-27.73333333 22.50666668-50.13333334 50.24000001-50.13333334zM134.50666666 315.83999999H460.8c27.73333333 0 50.24000001 22.50666668 50.24000001 50.24000001v50.24000001c0 27.73333333-22.50666668 50.13333334-50.24000001 50.13333333H134.50666666c-27.73333333 0-50.24000001-22.39999999-50.23999999-50.13333333v-50.24000001c0.10666668-27.84000001 22.50666668-50.24000001 50.24000001-50.23999999zM209.81333332 89.91999999h326.18666671c27.73333333 0 50.24000001 22.39999999 50.23999997 50.13333335v50.23999999c0 27.73333333-22.50666668 50.24000001-50.24000001 50.24000001H209.81333332c-27.73333333 0-50.24000001-22.50666668-50.23999999-50.24000001v-50.24000001c0-27.73333333 22.50666668-50.13333334 50.24000001-50.13333333zM692.05333333 623.36l274.66666669 176.00000002c23.36000001 14.93333333 30.08 45.97333334 15.14666666 69.33333332L954.77333334 910.93333333c-14.93333333 23.25333334-45.97333334 30.08-69.33333335 15.14666667l-274.66666666-176c-23.36000001-14.93333333-30.08-45.97333334-15.14666667-69.33333333l27.09333334-42.24000001c14.93333333-23.36000001 46.08000001-30.08 69.33333333-15.14666666z" fill="currentColor"></path>
+</svg>
+    <span>TOC</span>
+  </div>
+  <div class="widget-body">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hadoop%E7%9A%84historyserver%E9%85%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">hadoop的historyserver配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9mapred-site-xml%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text">修改mapred-site.xml文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9yarn-site-xml%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text">修改yarn-site.xml文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8historyserver"><span class="toc-number">1.3.</span> <span class="toc-text">启动historyserver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E5%BC%95%E5%8F%91%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA"><span class="toc-number">1.4.</span> <span class="toc-text">可能引发内存溢出</span></a></li></ol></li></ol>
+  </div>
+</section>
+
 
       
 <section class="widet-notice widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
